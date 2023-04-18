@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "version": "1.0",
+  "name": "CandyFloss",
+  "theme": {
+    "images": {
+      "additional_backgrounds": [
+        "images/bg-000-5672c42860d5b06e1058dc477397f3ef.svg"
+      ]
+    },
+    "properties": {
+      "additional_backgrounds_alignment": [
+        "top"
+      ],
+      "additional_backgrounds_tiling": [
+        "repeat"
+      ]
+    },
+    "colors": {
+      "toolbar": "rgb(42, 42, 134)",
+      "toolbar_text": "rgb(255, 255, 255)",
+      "frame": "rgb(20, 20, 65)",
+      "tab_background_text": "rgb(215, 226, 239)",
+      "toolbar_field": "rgb(103, 115, 211)",
+      "toolbar_field_text": "rgb(255, 255, 255)",
+      "tab_line": "rgb(255, 97, 174)",
+      "popup": "rgb(20, 20, 65)",
+      "popup_text": "rgb(215, 226, 239)",
+      "tab_loading": "rgb(255, 97, 174)"
+    }
+  }
+}

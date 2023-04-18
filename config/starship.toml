@@ -1,0 +1,22 @@
+# Use custom format:
+format="$directory$character"
+
+# Prompt symbols 
+[character]
+success_symbol = "[](#9ece6a bold)"
+error_symbol = "[](#db4b4b)"
+vicmd_symbol = "[](#9ece6a)"
+
+[directory]
+format = "[]($style)[[ ](bg:#292E42 fg:#7aa2f7)$path](bg:#292E42 fg:#c0caf5)[ ]($style)"
+
+style = "bg:#1a1b26b3 fg:#292E42"
+
+[git_branch]
+format = "[]($style)[[ ](bg:#292E42 fg:#db4b4b)$branch](bg:#292E42 fg:#c0caf5)[]($style)"
+style = "bg:#1a1b26b3 fg:#292E42"
+
+# [character] # The name of the module we are configuring is "character"
+# #success_symbol = " ➜(bold-green)" 
+# success_symbol = "[ ](#a6d189)[](#e78284)[](#ef9f76)[](#e5c890)" # The "success_symbol" segment is being set to "➜" with the color "bold green"
+

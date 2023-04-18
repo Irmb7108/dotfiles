@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Catalina-Dark
+Comment=Plasma theme for miscellaneous global themes of kde, whit similar in appearance to macos
+
+X-KDE-PluginInfo-Author=zayronxio
+X-KDE-PluginInfo-Name=Catalina-Dark
+X-KDE-PluginInfo-Version=5.84.0
+X-KDE-PluginInfo-License=GPL3.0
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=5.0
+
+
+[ContrastEffect]
+enabled=false
+contrast=0.2
+intensity=1.4
+saturation=10
+
+[AdaptiveTransparency]
+enabled=true
