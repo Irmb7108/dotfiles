@@ -1,8 +1,10 @@
-
 #!/usr/bin/env bash
 #	Script to install my dotfiles
-#   Author: IR-MB
-#	url: https://github.com/Irmb7108/dotfiles
+#╦╦═╗   ╔╦╗╔╗   ╔╦╗╦ ╦  ╔╦╗╔═╗╔╦╗╔╦╗╔═╗╦╦  ╔═╗╔═╗╔═╗
+#║╠╦╝───║║║╠╩╗  ║║║╚╦╝   ║║║ ║ ║  ║║╠╣ ║║  ╚═╗║╣ ╚═╗
+#╩╩╚═   ╩ ╩╚═╝  ╩ ╩ ╩   ═╩╝╚═╝ ╩ ═╩╝╚  ╩╩═╝╚═╝╚═╝╚═╝
+                #   Author: IR-MB
+    #	url: https://github.com/Irmb7108/dotfiles
 
 CRE=$(tput setaf 1)
 CYE=$(tput setaf 3)
@@ -21,27 +23,25 @@ if [ "$(id -u)" = 0 ]; then
     exit 1
 fi
 logo () {
+  local text="${1:?}"
+  echo -e "\n\n\033[38;5;70m\033[1;31m\033[3m\
+		\033[1;32m
+		██╗██████╗       ███╗   ███╗██████╗
+		██║██╔══██╗      ████╗ ████║██╔══██╗
+		██║██████╔╝█████╗██╔████╔██║██████╔╝
+		██║██╔══██╗╚════╝██║╚██╔╝██║██╔══██╗
+		██║██║  ██║      ██║ ╚═╝ ██║██████╔╝
+		╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝
+		
+		\033[0m           Author: IR-MB
+    		https://github.com/Irmb7108/dotfiles\n\n"
 
-	local text="${1:?}"
-	echo -en "
-
-
-           ▀▀▀▀       ▀■▄▄▄       ▐■▄       ░░░░      ▀▄▄▄
-           ▐▓██▓▌  ▐▓██▓▓█▓▓▓▄▄▄   █▄▒▒▄▄ ▄▄▓▒█▓▓  ▐▓██▓▓▓███▄▄
-           ▐▒▓▓▓▌  ▐▒▓▓▓██████▓█▌  ▓▒░░▒░▄█▓█░░▒▌  ▐▒▓▓▓███░░░█▌
-           ▐░▒▒▒▌  ▐░▒▒▒▀▀▀ ▒▓░░▌  ▒▓▓▓▀██▀▀▓▓▓░▒  ▐░▒▒▒▀▀▀▓▒▒▒▓
-           ▐░░░░▌  ▐░░░░█  ▄▓▓▓▓█  ░░▒▒▌▐▓ ▐░░░█░  ▐░░░░   ▀▀██▀
-           ▀▒▓▓▓▌  ▀▒▓▓▓░▄▒▓▓▓▀▀▀  ▓▓░░▒ ░ ░▓▓▓░▀  ▀▒▓▓░█░░▒▓▓▄
-           ▐▒▒▒▒▌  ▐▒▒▒▒▌▀▀▓▓▄▄    ░░▓▓▓   ░▒▒▒░▌  ▐▒▒▒▒▄  ▄▒▓▓▓
-           ▐░░░░░  ▐░░░░░  ▀░░░░░  ▓ ░░░   ▒░░░░   ▐░░░░░░░░░░░▀
-
-                     IR-MB PACAGE&Dotfiles\n\n"
- printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
+  echo -e "\033[1;32m${text}\033[0m"
 }
 ########## ---------- Welcome ---------- ##########
 
 logo "Welcome!"
-printf '%s%sThis script will check if you have the necessary dependencies, and if not, it will install them. Then, it will clone the RICE in your HOME directory.\nAfter that, it will create a secure backup of your files, and then copy the new files to your computer.\n\nMy dotfiles DO NOT modify any of your system configurations.\nYou will be prompted for your root password to install missing dependencies and/or to switch to zsh shell if its not your default.\n\nThis script doesnt have the potential power to break your system, it only copies files from my repository to your HOME directory.%s\n\n' "${BLD}" "${CRE}" "${CNC}"
+printf '\e[31mThis script installs necessary dependencies, clones the RICE into your HOME directory, creates a secure backup of your files, and copies the new files to your computer. My dotfiles do not modify any of your system configurations. You will need to enter your root password to install missing dependencies or switch to the zsh shell if its not your default. This script cannot break your system as it only copies files from my repository to your HOME directory\n\n\e[0m'
 
 while true; do
 	read -rp " Do you wish to continue? [y/N]: " yn
@@ -55,6 +55,7 @@ clear
 
 ########## ---------- Preparing Folders ---------- ##########
 # List of packages to install
+logo "Installing needed packages.."
 packages=(
   firefox
   gnome-terminal
@@ -139,6 +140,20 @@ git clone --depth=1 https://github.com/Irmb7108/dotfiles
 sleep 2
 clear
 
+########## ---------- fonts files ---------- ##########
+
+if [ ! -d ~/.local/share/fonts/ ]; then
+    mkdir -p ~/.local/share/fonts/
+fi
+
+if [ ! -d ~/SFMono-Nerd-Font-Ligaturized/ ]; then
+    git clone https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git ~/SFMono-Nerd-Font-Ligaturized/
+fi
+
+if [ ! -f ~/.local/share/fonts/SFMono-Nerd-Font-Ligaturized-Regular.ttf ]; then
+    cp -R ~/SFMono-Nerd-Font-Ligaturized/* ~/.local/share/fonts/
+    rm -rf ~/SFMono-Nerd-Font-Ligaturized/
+fi
 ########## ---------- Backup files ---------- ##########
 
 logo "Backup files"
@@ -207,7 +222,7 @@ for archivos in ~/dotfiles/misc/bin/*; do
 done
 
 for archivos in ~/dotfiles/misc/Pictures/*; do
-  cp -R "${archivos}" ~/$HOME/Pictures
+  cp -R "${archivos}" "$HOME/Pictures/"
   if [ $? -eq 0 ]; then
 	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
 	sleep 1
@@ -217,17 +232,6 @@ for archivos in ~/dotfiles/misc/Pictures/*; do
   fi
 done
 
-for archivos in ~/dotfiles/misc/fonts/*; do
-git clone https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git
-  cp -R "${archivos}" ~/.local/share/fonts/
-  if [ $? -eq 0 ]; then
-	printf "%s%s%s copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
-	sleep 1
-  else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
-	sleep 1
-  fi
-done
 
 for archivos in ~/dotfiles/misc/asciiart/*; do
   cp -R "${archivos}" ~/.local/share/asciiart/
@@ -251,8 +255,12 @@ for archivos in ~/dotfiles/misc/firefox/*; do
   fi
 done
 
+########## ---------- copy vim config ---------- ##########
+logo "Copy Vim Config to home"
 cp -f "$HOME"/dotfiles/home/.vimrc "$HOME"
-cp -f "$HOME"/dotfiles/home/.vim_runtime "$HOME"
+if [ ! -d "$HOME"/.vim_runtime ]; then
+    cp -R "$HOME"/dotfiles/home/.vim_runtime "$HOME"
+fi
 fc-cache -rv >/dev/null 2>&1
 printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 3
@@ -291,15 +299,15 @@ printf "%s%sDone!!%s\n\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 2
 
 
+
 ########## --------- Changing shell to fish ---------- ##########
-
-logo "Changing default shell to fish"
+logo "Changing default shell to fish "
+# Change default shell to fish
 printf "%s%sIf your shell is not fish will be changed now.\nYour root password is needed to make the change.\n\nAfter that is important for you to reboot.\n %s\n" "${BLD}" "${CYE}" "${CNC}"
-if [[ $SHELL != "/usr/bin/fish" ]]; then
-  echo "Changing shell to fish, your root pass is needed."
-  chsh -s /usr/bin/fish
+if [ "$SHELL" = "/usr/bin/fish" ]; then
+  echo "Your default shell is fish and ready to use!"
 else
-  printf "%s%sYour shell is already fish\nGood bye! installation finished, now reboot%s\n" "${BLD}" "${CGR}" "${CNC}"
-  fish
+  echo "Changing default shell to fish..."
+  chsh -s /usr/bin/fish
+  echo "Default shell changed to fish!"
 fi
-
