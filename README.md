@@ -5,7 +5,7 @@
 <table align="center">
    <tr>
       <th align="center">
-         <sup><sub>:warning: WARNING :warning:</sub></sup>
+         <sup><sub>:warning: Welcome :warning:</sub></sup>
       </th>
    </tr>
    <tr>
