@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 #	Script to install my dotfiles
 #   Author: IR-MB
@@ -19,7 +20,24 @@ if [ "$(id -u)" = 0 ]; then
     echo "This script MUST NOT be run as root user."
     exit 1
 fi
+logo () {
 
+	local text="${1:?}"
+	echo -en "
+
+
+           ▀▀▀▀       ▀■▄▄▄       ▐■▄       ░░░░      ▀▄▄▄
+           ▐▓██▓▌  ▐▓██▓▓█▓▓▓▄▄▄   █▄▒▒▄▄ ▄▄▓▒█▓▓  ▐▓██▓▓▓███▄▄
+           ▐▒▓▓▓▌  ▐▒▓▓▓██████▓█▌  ▓▒░░▒░▄█▓█░░▒▌  ▐▒▓▓▓███░░░█▌
+           ▐░▒▒▒▌  ▐░▒▒▒▀▀▀ ▒▓░░▌  ▒▓▓▓▀██▀▀▓▓▓░▒  ▐░▒▒▒▀▀▀▓▒▒▒▓
+           ▐░░░░▌  ▐░░░░█  ▄▓▓▓▓█  ░░▒▒▌▐▓ ▐░░░█░  ▐░░░░   ▀▀██▀
+           ▀▒▓▓▓▌  ▀▒▓▓▓░▄▒▓▓▓▀▀▀  ▓▓░░▒ ░ ░▓▓▓░▀  ▀▒▓▓░█░░▒▓▓▄
+           ▐▒▒▒▒▌  ▐▒▒▒▒▌▀▀▓▓▄▄    ░░▓▓▓   ░▒▒▒░▌  ▐▒▒▒▒▄  ▄▒▓▓▓
+           ▐░░░░░  ▐░░░░░  ▀░░░░░  ▓ ░░░   ▒░░░░   ▐░░░░░░░░░░░▀
+
+                     IR-MB PACAGE&Dotfiles\n\n"
+ printf ' %s [%s%s %s%s %s]%s\n\n' "${CRE}" "${CNC}" "${CYE}" "${text}" "${CNC}" "${CRE}" "${CNC}"
+}
 ########## ---------- Welcome ---------- ##########
 
 logo "Welcome!"
@@ -35,11 +53,72 @@ while true; do
     done
 clear
 
-########## ---------- Install packages ---------- ##########
-
-
 ########## ---------- Preparing Folders ---------- ##########
+# List of packages to install
+packages=(
+  firefox
+  gnome-terminal
+  zsh
+  neovim
+  lolcat
+  zsh-syntax-highlighting
+  htop
+  wezterm
+  yay
+  rofi
+  fish
+  visual-studio-code-bin
+  tilix
+  spicetify-cli-git
+  spotify
+  tabby-bin
+  kitty
+  haruna
+  konsole
+  alacritty
+  discord
+  telegram-desktop
+  #nekoray-bin
+  gedit
+  vlc
+  figlet
+  ipython
+  feh
+  geany
+  jgmenu
+  redshif
+  tilix
+  capitaine-cursors
 
+
+
+)
+
+# Check if yay is installed, if not, install it
+if ! command -v yay &> /dev/null; then
+  echo "yay not found, using pacman instead"
+  for package in "${packages[@]}"
+  do
+    if ! pacman -Qqen | grep -q "^$package$"; then
+      echo "Installing package: $package"
+      sudo pacman -S --noconfirm "$package"
+    else
+      echo "Package $package is already installed"
+    fi
+  done
+else
+  echo "yay is already installed"
+  # Install packages with yay
+  for package in "${packages[@]}"
+  do
+    if ! yay -Qqen | grep -q "^$package$"; then
+      echo "Installing package: $package"
+      yay -S --noconfirm "$package"
+    else
+      echo "Package $package is already installed"
+    fi
+  done
+fi
 logo "Preparing Folders"
 if [ ! -e $HOME/.config/user-dirs.dirs ]; then
 	xdg-user-dirs-update
