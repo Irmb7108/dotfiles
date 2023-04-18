@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-#  ╦═╗╦╔═╗╔═╗  ╦╔╗╔╔═╗╔╦╗╔═╗╦  ╦  ╔═╗╦═╗
-#  ╠╦╝║║  ║╣   ║║║║╚═╗ ║ ╠═╣║  ║  ║╣ ╠╦╝
-#  ╩╚═╩╚═╝╚═╝  ╩╝╚╝╚═╝ ╩ ╩ ╩╩═╝╩═╝╚═╝╩╚═
 #	Script to install my dotfiles
-#   Author: z0mbi3
-#	url: https://github.com/gh0stzk
+#   Author: IR-MB
+#	url: https://github.com/Irmb7108/dotfiles
 
 CRE=$(tput setaf 1)
 CYE=$(tput setaf 3)
@@ -57,9 +54,9 @@ clear
 
 logo "Downloading dotfiles"
 [ -d ~/dotfiles ] && rm -rf ~/dotfiles
-printf "Cloning rice from https://github.com/gh0stzk/dotfiles\n"
+printf "Cloning rice from https://github.com/Irmb7108/dotfiles\n"
 cd
-git clone --depth=1 https://github.com/gh0stzk/dotfiles.git
+git clone --depth=1 https://github.com/Irmb7108/dotfiles
 sleep 2
 clear
 
