@@ -1,4 +1,4 @@
-<p align="center"><img src="Irmb7108/filed/blob/main/dotfiles-logo.svg" width=512></p>
+<p align="center"><img src=" filed/dotfiles-logo.svg" width=512></p>
 <p align="center">
 </p>
 
