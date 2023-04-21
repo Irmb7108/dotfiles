@@ -1,8 +1,5 @@
 <p align="center"><img src="assets/dotfiles-logo.svg" width=512></p>
 <p align="center">
-    <a href="https://github.com/rememberYou/dotfiles/actions">
-        <img src="https://github.com/rememberYou/dotfiles/workflows/Build/badge.svg" alt="Actions Status">
-    </a>
 </p>
 
 <p align="center">This repository contains all of my dotfiles configuration.</p>
