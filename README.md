@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/dotfiles-logo.svg" width=512></p>
+<p align="center"><img src=" " width=512></p>
 <p align="center">
 </p>
 
