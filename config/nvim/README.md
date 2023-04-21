@@ -12,5 +12,5 @@
 ## Usage
 
 ```
-git clone https://github.com/Irmb7108/mynvim.git ~/.config/nvim
+git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim
 ```
