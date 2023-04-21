@@ -90,6 +90,9 @@ packages=(
   redshif
   tilix
   capitaine-cursors
+  #simplescreenrecorder
+  flameshot
+
 
 
 
@@ -141,6 +144,7 @@ sleep 2
 clear
 
 ########## ---------- fonts files ---------- ##########
+logo "Downloading font "
 
 if [ ! -d ~/.local/share/fonts/ ]; then
     mkdir -p ~/.local/share/fonts/
@@ -264,6 +268,18 @@ fi
 fc-cache -rv >/dev/null 2>&1
 printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 3
+
+########## - Installing lunarvim & copied my config source ------- ##########
+
+# Clone LunarVim
+logo "Cloning LunarVim..."
+rm -rf ~/.config/nvim
+git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim 2>&1 >/dev/null
+
+# Download config.lua
+echo "Downloading config.lua..."
+wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua
+printf "%s%sCloning LunarVim succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 
 ########## ---------- Installing Paru & Eww from source ---------- ##########
 
