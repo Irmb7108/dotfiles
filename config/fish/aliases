@@ -122,5 +122,6 @@ alias apps="pacman -Slq | fzf --multi --preview 'pacman -Si {1}' | xargs -ro sud
 alias c='cd'
 alias cla='clear'
 alias cpv='rsync -ahP'
+alias lunarvim='git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim && wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua'
 alias paclist="pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'"
 alias dots7108='curl https://raw.githubusercontent.com/Irmb7108/dotfiles/master/RiceInstaller -o $HOME/RiceInstaller'
