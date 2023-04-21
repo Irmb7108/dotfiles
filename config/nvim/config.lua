@@ -30,7 +30,7 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 
 -- -- Change theme settings
--- lvim.colorscheme = "lunar"
+lvim.colorscheme = "lunar"
 
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
@@ -39,7 +39,7 @@ lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 
 -- Automatically install missing parsers when entering buffer
-lvim.builtin.treesitter.auto_install = false
+lvim.builtin.treesitter.auto_install = true
 
 -- lvim.builtin.treesitter.ignore_install = { "haskell" }
 
@@ -91,11 +91,9 @@ lvim.builtin.treesitter.auto_install = false
 --     args = { "--severity", "warning" },
 --   },
 -- }
-
-
--- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
 lvim.plugins = {
-  { -- show #ffffff colors
+  {
+    -- show #ffffff colors
     "NvChad/nvim-colorizer.lua",
     config = function()
       require("colorizer").setup()
@@ -105,14 +103,42 @@ lvim.plugins = {
     "max397574/better-escape.nvim",
     config = function()
       require("better_escape").setup({
-        mapping = { "jk", "jj" }, -- a table with mappings to use
+        mapping = { "jk", "jj" },  -- a table with mappings to use
         --timeout = 120, -- the time in which the keys must be hit in ms. Use option timeoutlen by default
         clear_empty_lines = false, -- clear line after escaping if there is only whitespace
-        keys = "<Esc>", -- keys used for escaping, if it is a function will use the result everytime
+        keys = "<Esc>",            -- keys used for escaping, if it is a function will use the result everytime
       })
     end,
   },
+  {
+    "jose-elias-alvarez/typescript.nvim",
+  },
+  {
+    "lunarvim/lunar.nvim",
+  },
+  {
+    "morhetz/gruvbox",
+  },
+  {
+    "sainnhe/gruvbox-material",
+  },
+  {
+    "sainnhe/sonokai",
+  },
+  {
+    "sainnhe/edge",
+  },
+  {
+    "lunarvim/horizon.nvim",
+  },
+  {
+    "tomasr/molokai",
+  },
+  {
+    "ayu-theme/ayu-vim",
+  },
 }
+-- -- Additional Plugins <https://www.lunarvim.org/docs/plugins#user-plugins>
 -- -- Autocommands (`:help autocmd`) <https://neovim.io/doc/user/autocmd.html>
 -- vim.api.nvim_create_autocmd("FileType", {
 --   pattern = "zsh",
