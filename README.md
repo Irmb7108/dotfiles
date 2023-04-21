@@ -4,16 +4,12 @@
 </p>
 
 <p align="center">This repository contains all of my dotfiles configuration.</p>
-<p align="center">## 📦 setup
+``` ## 📦 setup
 
 ### 💾 Installation:
 The installer only works for **ARCH** Linux, and based distros.
 
-<b>Open a terminal in HOME</b>
-- **First download the installer**
-```sh
-curl https://raw.githubusercontent.com/Irmb7108/dotfiles/master/RiceInstaller -o $HOME/RiceInstaller
-```</p>
+<b>Open a terminal in HOME</b>```
 ## 📦 setup
 
 ### 💾 Installation:
