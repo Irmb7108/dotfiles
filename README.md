@@ -4,12 +4,7 @@
 </p>
 
 <p align="center">This repository contains all of my dotfiles configuration.</p>
-``` ## 📦 setup
 
-### 💾 Installation:
-The installer only works for **ARCH** Linux, and based distros.
-
-<b>Open a terminal in HOME</b>```
 ## 📦 setup
 
 ### 💾 Installation:
