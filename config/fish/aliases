@@ -125,3 +125,36 @@ alias cpv='rsync -ahP'
 alias lunarvim='git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim && wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua'
 alias paclist="pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'" 
 alias dots7108='curl https://raw.githubusercontent.com/Irmb7108/dotfiles/master/RiceInstaller -o $HOME/RiceInstaller'
+# Search and install packages
+alias pacin="pacman -Slq | fzf -m --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk \"{print \$2}\")' | xargs -ro sudo pacman -S"
+# Search and install packages grom aur
+alias paruin="paru -Slq | fzf -m --preview 'cat <(paru -Si {1}) <(paru -Fl {1} | awk \"{print \$2}\")' | xargs -ro  paru -S"
+# Search and remove packages
+alias pacrem="pacman -Qq | fzf --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns"
+# Search btw installed packages
+alias pac="pacman -Q | fzf"
+
+# Check aur comments
+alias parucom="paru -Gc"
+
+# Check aur updates
+alias parupd="paru -Qua"
+
+#Check pacman updates
+alias pacupd="pacman -Qu"
+
+# Check pkgbuild
+alias parucheck="paru -Gp"
+
+# Clean Orphan packages
+alias cleanpac='sudo pacman -Rns $(pacman -Qtdq); paru -c'
+
+# Check Apps eating cpu 
+alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
+
+# Check Apps eating mem
+alias mem="ps axch -o cmd:15,%mem --sort=-%mem | head"
+
+alias psmem="sudo ps_mem | grep -E 'Program|awesome|picom|zsh|alacritty|---'"
+
+alias git-rm="git ls-files --deleted -z | xargs -0 git rm"
