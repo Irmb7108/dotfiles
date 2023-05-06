@@ -52,22 +52,21 @@ while true; do
     done
 clear
 
+
 ########## ---------- Preparing Folders ---------- ##########
 # List of packages to install
 logo "Installing needed packages.."
 packages=(
   git
-  yay
   firefox
-  gnome-terminal
   zsh
   neovim
   lolcat
   zsh-syntax-highlighting
   htop
   wezterm
-  fzf
   exa
+  fzf
   rofi
   fish
   visual-studio-code-bin
@@ -134,6 +133,15 @@ else
 fi
 sleep 2 
 clear
+
+
+##########-----------install windscribe vpn in arch -------#####
+logo "Downloading & installing windscribe vpn"
+# Download Windscribe
+cd ~/Downloads
+wget https://windscribe.com/install/desktop/linux_zst_x64 -O windscribe.zst
+sudo pacman -U windscribe*.zst
+echo "Installing done "
 
 ########## ---------- Cloning the Rice! ---------- ##########
 
