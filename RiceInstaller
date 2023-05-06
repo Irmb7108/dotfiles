@@ -79,6 +79,8 @@ packages=(
   konsole
   alacritty
   discord
+  gpick
+  reflector
   telegram-desktop
   nekoray-bin
   gedit
