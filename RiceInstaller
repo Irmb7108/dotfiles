@@ -62,6 +62,7 @@ packages=(
   zsh
   neovim
   lolcat
+  rsync
   zsh-syntax-highlighting
   htop
   wezterm
@@ -74,6 +75,7 @@ packages=(
   spicetify-cli-git
   spotify
   tabby-bin
+  anydesk-bin
   kitty
   haruna
   konsole
@@ -95,6 +97,7 @@ packages=(
   capitaine-cursors
   simplescreenrecorder
   flameshot
+  mousepad
 
 
 
