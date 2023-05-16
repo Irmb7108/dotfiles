@@ -40,7 +40,7 @@ logo () {
 ########## ---------- Welcome ---------- ##########
 
 logo "Welcome!"
-printf '\e[31mThis script installs necessary dependencies, clones the RICE into your HOME directory, creates a secure backup of your files, and copies the new files to your computer. My dotfiles do not modify any of your system configurations. You will need to enter your root password to install missing dependencies or switch to the zsh shell if its not your default. This script cannot break your system as it only copies files from my repository to your HOME directory\n\n\e[0m'
+printf '\e[31mThis script installs necessary dependencies, clones the RICE into your HOME directory, creates a secure backup of your files, and copies the new files to your computer. My dotfiles do not modify any of your system configurations. You will need to enter your root password to install missing dependencies or switch to the fish shell if its not your default. This script cannot break your system as it only copies files from my repository to your HOME directory\n\n\e[0m'
 
 while true; do
 	read -rp " Do you wish to continue? [y/N]: " yn
@@ -51,8 +51,8 @@ while true; do
 		esac
     done
 clear
-
-
+logo "Update System Package"
+sudo pacman -Syyu
 ########## ---------- Preparing Folders ---------- ##########
 # List of packages to install
 logo "Installing needed packages.."
@@ -62,7 +62,6 @@ packages=(
   zsh
   neovim
   lolcat
-  rsync
   zsh-syntax-highlighting
   htop
   wezterm
@@ -75,14 +74,11 @@ packages=(
   spicetify-cli-git
   spotify
   tabby-bin
-  anydesk-bin
   kitty
   haruna
   konsole
   alacritty
   discord
-  gpick
-  reflector
   telegram-desktop
   nekoray-bin
   gedit
@@ -97,13 +93,19 @@ packages=(
   capitaine-cursors
   simplescreenrecorder
   flameshot
-  mousepad
 
 
 
 
 )
+# Check and install git if not already installed
+if ! command -v git &> /dev/null; then
+    echo "git prerequisite is not installed. Installing..."
+    sudo pacman -Syu --noconfirm git
+    echo "git has been successfully installed."
+fi
 
+# Continue with the rest of your script...
 # Check if yay is installed, if not, install it
 if ! command -v yay &> /dev/null; then
   echo "yay not found, using pacman instead"
