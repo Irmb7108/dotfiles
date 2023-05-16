@@ -4,8 +4,11 @@ end
 set fish_greeting
 source ~/.config/fish/aliases
 starship init fish | source
-alias backup='~/.config/fish/scrips/backup-files/backup.sh'
-
+alias backup='chmod +x ~/.config/fish/scrips/backup-files/backup.sh && ~/.config/fish/scrips/backup-files/backup.sh'
+#alias backup='~/.config/fish/scrips/backup-files/backup.sh'
+abbr con 'ping -c 5 8.8.8.8' # Check network
+abbr myip 'curl ifconfig.co' # Print public IP
+abbr untar 'tar -zxvf'
 #install nekoray vpn in arch 
 alias installvpn='yay -S nekoray-bin'
 # function gcb
