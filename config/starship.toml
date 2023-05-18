@@ -19,4 +19,10 @@ style = "bg:#1a1b26b3 fg:#292E42"
 # [character] # The name of the module we are configuring is "character"
 # #success_symbol = " ➜(bold-green)" 
 # success_symbol = "[ ](#a6d189)[](#e78284)[](#ef9f76)[](#e5c890)" # The "success_symbol" segment is being set to "➜" with the color "bold green"
-
+[directory.substitutions]
+#"~" = " ~"
+"Documents" = " "
+"Downloads" = " "
+"Music" = "🎜 "
+"Pictures" = " "
+"Videos" = " "
