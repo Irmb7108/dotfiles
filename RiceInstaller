@@ -213,6 +213,9 @@ cp -f "$HOME"/dotfiles/home/.vimrc "$HOME"
 if [ ! -d "$HOME"/.vim_runtime ]; then
     cp -R "$HOME"/dotfiles/home/.vim_runtime "$HOME"
 fi
+logo "Copy Tmux Config to home"
+mv ~/dotfiles/home/tmux.conf ~/dotfiles/home/.tmux.conf
+cp -f "$HOME"/dotfiles/home/.tmux.conf "$HOME"
 fc-cache -rv >/dev/null 2>&1
 printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
 sleep 3
