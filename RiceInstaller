@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+#	Script to install my dotfiles
+#╦╦═╗   ╔╦╗╔╗   ╔╦╗╦ ╦  ╔╦╗╔═╗╔╦╗╔╦╗╔═╗╦╦  ╔═╗╔═╗╔═╗
+#║╠╦╝───║║║╠╩╗  ║║║╚╦╝   ║║║ ║ ║  ║║╠╣ ║║  ╚═╗║╣ ╚═╗
+#╩╩╚═   ╩ ╩╚═╝  ╩ ╩ ╩   ═╩╝╚═╝ ╩ ═╩╝╚  ╩╩═╝╚═╝╚═╝╚═╝
+                #   Author: IR-MB
+    #	url: https://github.com/Irmb7108/dotfiles
+CRE=$(tput setaf 1)
+CYE=$(tput setaf 3)
+CGR=$(tput setaf 2)
+CBL=$(tput setaf 4)
+BLD=$(tput bold)
+CNC=$(tput sgr0)
+backup_folder=~/.RiceBackup
+date=$(date +%Y%m%d-%H%M%S)
+########## ---------- You must not run this as root ---------- ##########
+if [ "$(id -u)" = 0 ]; then
+    echo "This script MUST NOT be run as root user."
+    exit 1
+fi
+logo () {
+  local text="${1:?}"
+  echo -e "\n\n\033[38;5;70m\033[1;31m\033[3m\
+		\033[1;32m
+			██╗██████╗       ███╗   ███╗██████╗
+			██║██╔══██╗      ████╗ ████║██╔══██╗
+			██║██████╔╝█████╗██╔████╔██║██████╔╝
+			██║██╔══██╗╚════╝██║╚██╔╝██║██╔══██╗
+			██║██║  ██║      ██║ ╚═╝ ██║██████╔╝
+			╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝
+		  \033[0m               Author: IR-MB
+    		       https://github.com/Irmb7108/dotfiles\n\n"
+
+  echo -e "\033[1;32m${text}\033[0m"
+}
+########## ---------- Welcome ---------- ##########
+logo "Welcome!"
+printf '\e[31mThis script installs necessary dependencies, clones the RICE into your HOME directory, creates a secure backup of your files, and copies the new files to your computer. My dotfiles do not modify any of your system configurations. You will need to enter your root password to install missing dependencies or switch to the fish shell if its not your default. This script cannot break your system as it only copies files from my repository to your HOME directory\n\n\e[0m'
+while true; do
+	read -rp " Do you wish to continue? [y/N]: " yn
+		case $yn in
+			[Yy]* ) break;;
+			[Nn]* ) exit;;
+			* ) printf " Error: just write 'y' or 'n'\n\n";;
+		esac
+    done
+clear
+logo "Update System Package"
+sudo pacman -Syyu
+########## ---------- Preparing Folders ---------- ##########
+# List of packages to install
+logo "Installing needed packages.."
+packages=(
+base-devel git firefox zsh neovim brave-bin mullvad-vpn-bin lolcat tmux htop wezterm exa gimp key-mon fzf viewnior kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop gedit vlc figlet ipython feh geany jgmenu redshif tilix simplescreenrecorder flameshot audacious mpd ncmpcpp atril engrampa pluma rhythmbox
+)
+# Check and install git if not already installed
+if ! command -v git &> /dev/null; then
+    echo "git prerequisite is not installed. Installing..."
+    sudo pacman -Syu --noconfirm git
+    echo "git has been successfully installed."
+fi
+
+# Continue with the rest of your script...
+# Check if yay is installed, if not, install it
+if ! command -v yay &> /dev/null; then
+  echo "yay not found, using pacman instead"
+  for package in "${packages[@]}"
+  do
+    if ! pacman -Qqen | grep -q "^$package$"; then
+      echo "Installing package: $package"
+      sudo pacman -S --noconfirm "$package"
+    else
+      echo "Package $package is already installed"
+    fi
+  done
+else
+  echo "yay is already installed"
+  # Install packages with yay
+  for package in "${packages[@]}"
+  do
+    if ! yay -Qqen | grep -q "^$package$"; then
+      echo "Installing package: $package"
+      yay -S --noconfirm "$package"
+    else
+      echo "Package $package is already installed"
+    fi
+  done
+fi
+logo "Preparing Folders"
+if [ ! -e $HOME/.config/user-dirs.dirs ]; then
+	xdg-user-dirs-update
+	echo "Creating xdg-user-dirs"
+else
+	echo "user-dirs.dirs already exists"
+fi
+sleep 2 
+clear
+##########-----------install windscribe vpn in arch -------#####
+logo "Downloading & installing windscribe vpn"
+# Download Windscribe
+cd ~/Downloads
+wget https://windscribe.com/install/desktop/linux_zst_x64 -O windscribe.zst
+sudo pacman -U windscribe*.zst
+echo "Installing done "
+########## ---------- Cloning the Rice! ---------- ##########
+logo "Downloading dotfiles"
+[ -d ~/dotfiles ] && rm -rf ~/dotfiles
+printf "Cloning rice from https://github.com/Irmb7108/dotfiles\n"
+cd
+git clone --depth=1 https://github.com/Irmb7108/dotfiles
+sleep 2
+clear
+########## ---------- fonts files ---------- ##########
+logo "Downloading font "
+if [ ! -d ~/.local/share/fonts/ ]; then
+    mkdir -p ~/.local/share/fonts/
+fi
+if [ ! -d ~/SFMono-Nerd-Font-Ligaturized/ ]; then
+    git clone https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git ~/SFMono-Nerd-Font-Ligaturized/
+fi
+if [ ! -f ~/.local/share/fonts/SFMono-Nerd-Font-Ligaturized-Regular.ttf ]; then
+    cp -R ~/SFMono-Nerd-Font-Ligaturized/* ~/.local/share/fonts/
+    rm -rf ~/SFMono-Nerd-Font-Ligaturized/
+fi
+########## ---------- Backup files ---------- ##########
+logo "Backup files"
+printf "Backup files will be stored in %s%s%s/.RiceBackup%s \n\n" "${BLD}" "${CRE}" "$HOME" "${CNC}"
+sleep 10
+if [ ! -d "$backup_folder" ]; then
+  mkdir -p "$backup_folder"
+fi
+for folder in bspwm alacritty picom rofi eww sxhkd dunst polybar ncmpcpp nvim ranger zsh mpd paru; do
+  if [ -d "$HOME/.config/$folder" ]; then
+    mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date"
+    echo "$folder folder backed up successfully at $backup_folder/${folder}_$date"
+  else
+    echo "The folder $folder does not exist in $HOME/.config/"
+  fi
+done
+for folder in chrome; do
+  if [ -d "$HOME"/.mozilla/firefox/*.default-release/$folder ]; then
+    mv "$HOME"/.mozilla/firefox/*.default-release/$folder "$backup_folder"/${folder}_$date
+    echo "$folder folder backed up successfully at $backup_folder/${folder}_$date"
+  else
+    echo "The folder $folder does not exist in $HOME/.mozilla/firefox/"
+  fi
+done
+[ -f ~/.zshrc ] && mv ~/.zshrc ~/.RiceBackup/.zshrc-backup-"$(date +%Y.%m.%d-%H.%M.%S)"
+printf "%s%sDone!!%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 5
+########## ---------- Copy the Rice! ---------- ##########
+logo "Installing dotfiles.."
+printf "Copying files to respective directories..\n"
+[ ! -d ~/.config ] && mkdir -p ~/.config
+[ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
+[ ! -d ~/.local/share/applications ] && mkdir -p ~/.local/share/applications
+[ ! -d ~/.local/share/fonts ] && mkdir -p ~/.local/share/fonts
+[ ! -d ~/.local/share/asciiart ] && mkdir -p ~/.local/share/asciiart
+for archivos in ~/dotfiles/config/*; do
+  cp -R "${archivos}" ~/.config/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+for archivos in ~/dotfiles/misc/bin/*; do
+  cp -R "${archivos}" ~/.local/bin/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+for archivos in ~/dotfiles/misc/Pictures/*; do
+  cp -R "${archivos}" "$HOME/Pictures/"
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+for archivos in ~/dotfiles/misc/asciiart/*; do
+  cp -R "${archivos}" ~/.local/share/asciiart/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+
+for archivos in ~/dotfiles/misc/firefox/*; do
+  cp -R "${archivos}" ~/.mozilla/firefox/*.default-release/
+  if [ $? -eq 0 ]; then
+	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
+	sleep 1
+  else
+	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
+	sleep 1
+  fi
+done
+########## ---------- copy vim config ---------- ##########
+logo "Copy Vim Config to home"
+cp -f "$HOME"/dotfiles/home/.vimrc "$HOME"
+if [ ! -d "$HOME"/.vim_runtime ]; then
+    cp -R "$HOME"/dotfiles/home/.vim_runtime "$HOME"
+fi
+logo "Copy Tmux Config to home"
+mv ~/dotfiles/home/tmux.conf ~/dotfiles/home/.tmux.conf
+cp -f "$HOME"/dotfiles/home/.tmux.conf "$HOME"
+fc-cache -rv >/dev/null 2>&1
+printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 3
+######### - Installing lunarvim & copied my config source ------- ##########
+# Clone LunarVim
+logo "Cloning LunarVim..."
+rm -rf ~/.config/nvim
+git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim 2>&1 >/dev/null
+# Download config.lua
+echo "Downloading config.lua..."
+wget -P ~/.config/nvim/lua/lvim/core/alpha/ https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/dashboard.lua
+wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua
+printf "%s%sCloning LunarVim succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
+########## ---------- Installing Paru & Eww from source ---------- ##########
+logo "installing Paru & Eww"
+
+if ! command -v paru >/dev/null 2>&1; then
+	printf "%s%sInstalling paru%s\n" "${BLD}" "${CBL}" "${CNC}"
+	cd
+	git clone https://aur.archlinux.org/paru-bin.git
+	cd paru-bin
+	makepkg -si --noconfirm
+	cd
+else
+	printf "%s%sParu is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+fi
+
+if ! command -v eww >/dev/null 2>&1; then 
+	printf "\n%s%sInstalling Eww, this could take 10 mins or more.%s\n" "${BLD}" "${CBL}" "${CNC}"
+	paru -S eww --skipreview --noconfirm
+	rm -rf {paru-bin,.cargo,.rustup}
+	rm -rf $HOME/.cache/paru/clone/eww
+else
+	printf "\n%s%sEww is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+fi
+########## ---------- Enabling MPD service ---------- ##########
+logo "Enabling mpd service"
+systemctl --user enable mpd.service
+systemctl --user start mpd.service
+printf "%s%sDone!!%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 2
+########## --------- Changing shell to fish ---------- ##########
+logo "Changing default shell to fish "
+# Change default shell to fish
+printf "%s%sIf your shell is not fish will be changed now.\nYour root password is needed to make the change.\n\nAfter that is important for you to reboot.\n %s\n" "${BLD}" "${CYE}" "${CNC}"
+if [ "$SHELL" = "/usr/bin/fish" ]; then
+  echo "Your default shell is fish and ready to use!"
+else
+  echo "Changing default shell to fish..."
+  chsh -s /usr/bin/fish
+  echo "Default shell changed to fish!"
+fi

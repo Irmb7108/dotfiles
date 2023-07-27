@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+
+# GNU version
+#alias diff="diff --color=auto" # GNU diffutils required (brew install diffutils)
+#alias df="gdf -h"
+#alias du="gdu -h"
+#alias grep="ggrep --color=auto"
+#alias chmod="gchmod --preserve-root -v"
+#alias chown="gchown --preserve-root -v"
+
+alias py3='python3'
+# General
+#alias cp="cp -iv"
+#alias mv="mv -iv"
+#alias md="mkdir -pv"
+#alias rm="rm -iv"
+alias c="clear"
+alias ka="killall"
+alias mk="mkdir -pv"
+alias mv='mv -v'
+alias new='touch'
+alias cp='cp -rv'
+alias copy='cp -rf'
+alias rm='rm -vr'
+alias cls='clear'
+alias gc='git clone'
+alias nv='nvim'
+alias vi='nvim'
+alias v='nvim'
+#alias cat='bat --color always --theme base16 --plain'
+#alias kw='kwrite'
+alias chx='chmod +x'
+alias cd..='cd ..'
+# ls
+#alias ls="gls -hFN --color=auto --group-directories-first --hyperlink=auto" # Use GNU ls (brew install coreutils)
+#alias la="ls -A"
+alias l='exa -lahF --color=always --icons --sort=size --group-directories-first'
+alias ls='exa --icons'
+alias la='exa -a --color=always --group-directories-first --icons'  # all files and dirs
+alias ll='exa -l --color=always --group-directories-first --icons'  # long format
+
+#alias l="ls -l"
+#alias ll='exa -lahFT --color=always --icons --sort=size --group-directories-first'
+alias lr="l -R"  # recursive
+alias lk="l -Sr" # sort by size, largest last
+alias lm="l -tr" # sort by modification time, i.e., mtime, newest last
+alias lc="lm -c"  # sort by change (status) time, i.e., ctime, newest last
+alias lx="l -X"  # sort by extension
+alias ld="ls -1|lolcat" 
+# Tmux
+alias tm="tmux-sessionizer"
+
+# brew
+alias bru="brew update"
+alias brU="brew upgrade"
+
+
+
+# Download
+#alias wget="wget --continue --progress=bar --timestamping"
+#alias curl="curl --continue-at - --location --progress-bar --remote-name --remote-time"
+#alias aria="aria2c --max-connection-per-server=5 --continue"
+#alias ydv="youtube-dl --add-metadata --restrict-filenames -i"
+#alias yda="ydv -x -f bestaudio/best"
+#
+#
+
+# Use neovim for vim if present
+#command -v nvim >/dev/null && alias vim="nvim" vi="nvim" v="nvim" vimdiff="nvim -d"
+
+# Dotfiles management
+alias dot="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+
+
+# "ranger" is an autoload function defined at ../functions/ranger
+# When quitting ranger using Z, change the shell pwd to the last visited directory
+alias ra="ranger"
+
+# Quick navigation (J for Jump)
+alias jdo="cd ~/Documents"
+alias jd="cd ~/Downloads"
+alias jb="cd ~/Library/CloudStorage/Dropbox/"
+alias jg="cd ~/gitrepos"
+alias jp="cd ~/projects"
+alias jc="cd ~/.config"
+alias jv="cd ~/.config/nvim"
+alias jp="cd ~/.config/polybar"
+alias jr="cd ~/.config/rofi"
+alias jf="cd ~/.config/fish"
+alias jk="cd ~/.config/kitty"
+alias ja="cd ~/.config/alacritty"
+#-----------
+alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
+alias e='exit'
+alias unlock="sudo rm /var/lib/pacman/db.lck"
+alias install="sudo pacman -S"
+alias portage="yay -S"
+alias mtar='tar -zcvf' # mtar <archive_compress>
+alias utar='tar -zxvf' # utar <archive_decompress> <file_list>
+alias lcs='clear' 
+#Pacman for software managment
+alias search='sudo pacman -Qs'
+alias remove='sudo pacman -R'
+alias install='sudo pacman -S'
+alias linstall='sudo pacman -U '
+alias update='sudo pacman -Syyu'
+alias clrcache='sudo pacman -Scc'
+alias orphans='sudo pacman -Rns $(pacman -Qtdq)'
+alias akring='sudo pacman -Sy archlinux-keyring --noconfirm'
+alias clone='cd $HOME/Downloads/newfile && git clone'
+alias ping="ping -c 4"
+alias ping="ping -c 4"
+alias cleanpac='sudo pacman -Rns $(pacman -Qtdq); paru -c'
+alias extract="tar -xvzf"
+alias installnvim='git clone https://github.com/Irmb7108/mynvim.git ~/.config/nvim'
+alias chat-gpt='ipython ~/test1/chatgpt.py'
+alias cclock="watch -t -n1 'date +%T | figlet' | lolcat"
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+alias sorter='sort -n -r'
+alias rofi-shot='rofi -show drun -normal-window & disown'
+alias tty-clock="tty-clock -S -c -C4 -D -s -n"
+alias c='cd $(fd --type d . | fzf)'
+alias tdfgo='$HOME/Downloads/git-repos/new2023/tdfgo/tdfgo'
+alias apps="pacman -Slq | fzf --multi --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S"
+alias c='cd'
+alias cla='clear'
+alias cpv='rsync -ahP'
+alias lunarvim='git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim && wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua'
+alias paclist="pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'" 
+alias dots7108='curl https://raw.githubusercontent.com/Irmb7108/dotfiles/master/RiceInstaller -o $HOME/RiceInstaller'
+# Search and install packages
+alias pacin="pacman -Slq | fzf -m --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk \"{print \$2}\")' | xargs -ro sudo pacman -S"
+# Search and install packages grom aur
+alias paruin="paru -Slq | fzf -m --preview 'cat <(paru -Si {1}) <(paru -Fl {1} | awk \"{print \$2}\")' | xargs -ro  paru -S"
+# Search and remove packages
+alias pacrem="pacman -Qq | fzf --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns"
+# Search btw installed packages
+alias pac="pacman -Q | fzf"
+
+# Check aur comments
+alias parucom="paru -Gc"
+
+# Check aur updates
+alias parupd="paru -Qua"
+
+#Check pacman updates
+alias pacupd="pacman -Qu"
+
+# Check pkgbuild
+alias parucheck="paru -Gp"
+
+# Clean Orphan packages
+alias cleanpac='sudo pacman -Rns $(pacman -Qtdq); paru -c'
+
+# Check Apps eating cpu 
+alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
+
+# Check Apps eating mem
+alias mem="ps axch -o cmd:15,%mem --sort=-%mem | head"
+
+alias psmem="sudo ps_mem | grep -E 'Program|awesome|picom|zsh|alacritty|---'"
+
+alias git-rm="git ls-files --deleted -z | xargs -0 git rm"
+
+alias paci="yay -Slq | fzf --color=16 -m --preview 'cat <(yay -Si {1}) <(yay -Fl {1} | awk \"{print \$2}\")' | xargs -ro yay -S --needed"
+alias pacr="yay -Qq | fzf --color=16 -m --preview 'yay -Qi {1}' | xargs -ro yay -Rns"
+alias pac="yay -Q | fzf --color=16"
+alias pacc='yay -Qtdq | yay -Rns -'
+## Arch
+alias up="yay -Syyu"
+alias ref="yay -Syy"
+alias searc="yay -Ss"
+alias pacs="yay -Q | wc -l"
+alias list="yay -Q"
+alias aur_list="yay -Qm"
+alias fh="find ~/ -name $1"
+alias cat="bat --theme=base16 --style=plain --paging=never"
+alias tree="ls --tree"
+alias catt='bat --style header --style snip --style changes --style header'
+
