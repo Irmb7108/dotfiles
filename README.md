@@ -23,3 +23,5 @@ chmod +x RiceInstaller
 ```sh
 ./RiceInstaller
 ```
+-**Telegram Desktop Themes:
+https://t.me/addtheme/ctp_mocha
