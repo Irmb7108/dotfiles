@@ -51,7 +51,7 @@ sudo pacman -Syyu
 # List of packages to install
 logo "Installing needed packages.."
 packages=(
-base-devel git firefox zsh neovim brave-bin mullvad-vpn-bin lolcat tmux htop wezterm exa gimp key-mon fzf viewnior kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop gedit vlc figlet ipython feh geany jgmenu redshif tilix simplescreenrecorder flameshot audacious mpd ncmpcpp atril engrampa pluma rhythmbox
+base-devel git firefox zsh neovim brave-bin mullvad-vpn-bin lolcat tmux remmina htop wezterm exa gimp key-mon fzf viewnior kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop gedit vlc figlet ipython feh geany jgmenu redshif tilix simplescreenrecorder flameshot audacious mpd ncmpcpp atril engrampa pluma rhythmbox
 )
 # Check and install git if not already installed
 if ! command -v git &> /dev/null; then
