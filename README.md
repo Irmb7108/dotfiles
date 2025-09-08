@@ -41,7 +41,16 @@ This repository contains my personal dotfiles for configuring a customized Arch 
 
 ## 💾 Installation
 
-1. Open a terminal in your HOME directory (cd ~).
-2. Download the installer:
-   `bash
-   curl -s https://raw.githubusercontent.com/Irmb7108/dotfiles/main/RiceInstaller -o RiceInstaller
+
+<b>Open a terminal in HOME</b>
+- First download the installer
+sh
+curl https://raw.githubusercontent.com/Irmb7108/dotfiles/master/RiceInstaller -o $HOME/RiceInstaller
+- Now give it execute permissions
+sh
+chmod +x RiceInstaller
+- Finally run the installer
+sh
+./RiceInstaller
+- Telegram Desktop Themes:
+👌🏻 https://t.me/addtheme/ctp_mocha
