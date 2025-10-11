@@ -63,8 +63,8 @@ sudo pacman -Syyu --noconfirm || { log "Error: System update failed"; exit 1; }
 # List of packages
 # logo "Installing needed packages..."
 packages=(
-    base-devel git go yay firefox zsh neovim brave-bin psmisc bat man
-    cherry-kde-git kvantum-theme-cherry-git kvantum starship mullvad-vpn-bin
+    base-devel git go yay firefox zsh neovim proton-vpn-gtk-app psmisc bat man
+    cherry-kde-git kvantum-theme-cherry-git kvantum starship net-tools
     lolcat tmux thinlinc remmina htop wezterm exa gimp key-mon fzf viewnior
     kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
     harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop
@@ -186,29 +186,13 @@ mv ~/dotfiles/home/tmux.conf ~/dotfiles/home/.tmux.conf 2>/dev/null && cp -f ~/d
 # Install LunarVim
 logo "Cloning LunarVim..."
 rm -rf ~/.config/nvim
-git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim && log "LunarVim cloned successfully" || { log "Error: Failed to clone LunarVim"; exit 1; }
-wget -P ~/.config/nvim/lua/lvim/core/alpha/ https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/dashboard.lua && log "dashboard.lua downloaded" || log "Warning: Failed to download dashboard.lua"
-wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua && log "config.lua downloaded" || log "Warning: Failed to download config.lua"
-# Install Paru and Eww
-logo "Installing Paru & Eww"
-if ! command -v paru &> /dev/null; then
-    log "Installing paru..."
-    cd /tmp
-    git clone https://aur.archlinux.org/paru-bin.git && cd paru-bin && makepkg -si --noconfirm && cd && rm -rf /tmp/paru-bin && log "paru installed successfully" || { log "Error: Failed to install paru"; exit 1; }
-else
-    log "Paru is already installed"
-fi
+# Clone LunarVim
+git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim
 
-if ! command -v eww &> /dev/null; then
-    log "Installing Eww..."
-    paru -S eww --skipreview --noconfirm && log "Eww installed successfully" || { log "Error: Failed to install Eww"; exit 1; }
-else
-    log "Eww is already installed"
-fi
-
-# Enable MPD service
-logo "Enabling MPD service"
-systemctl --user enable mpd.service && systemctl --user start mpd.service && log "MPD service enabled and started" || log "Error: Failed to enable/start MPD service"
+# Download config.lua
+wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua 
+# Download dashboard.lua
+wget -P ~/.config/nvim/lua/lvim/core/alpha/ https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/dashboard.lua.lua
 
 # Change shell to fish
 logo "Changing default shell to fish"
