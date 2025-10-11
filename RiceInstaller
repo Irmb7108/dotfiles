@@ -155,20 +155,8 @@ for dir in ~/dotfiles/config/*; do
     cp -R "$dir" ~/.config/ && log "$(basename "$dir") copied successfully" || { log "Error: Failed to copy $(basename "$dir")"; exit 1; }
 done
 
-for file in ~/dotfiles/misc/bin/*; do
-    cp -R "$file" ~/.local/bin/ && log "$(basename "$file") copied successfully" || log "Warning: Failed to copy $(basename "$file")"
-done
-
 for file in ~/dotfiles/misc/Pictures/*; do
     cp -R "$file" "$HOME/Pictures/" && log "$(basename "$file") copied successfully" || log "Warning: Failed to copy $(basename "$file")"
-done
-
-for file in ~/dotfiles/misc/asciiart/*; do
-    cp -R "$file" ~/.local/share/asciiart/ && log "$(basename "$file") copied successfully" || log "Warning: Failed to copy $(basename "$file")"
-done
-
-for file in ~/dotfiles/misc/firefox/*; do
-    cp -R "$file" ~/.mozilla/firefox/*.default-release/ && log "$(basename "$file") copied successfully" || log "Warning: Failed to copy $(basename "$file")"
 done
 
 # Copy Vim and Tmux configs
