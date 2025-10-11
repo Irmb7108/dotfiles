@@ -101,14 +101,7 @@ for package in "${packages[@]}"; do
     fi
 done
 
-# Prepare XDG user directories
-logo "Preparing Folders"
-if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
-    xdg-user-dirs-update
-    log "Created xdg-user-dirs"
-else
-    log "user-dirs.dirs already exists"
-fi
+
 
 # Clone dotfiles
 logo "Downloading dotfiles"
@@ -128,36 +121,6 @@ fi
 find ~/SFMono-Nerd-Font-Ligaturized -name "*.ttf" -exec cp {} ~/.local/share/fonts/ \; || log "Warning: Failed to copy some fonts"
 rm -rf ~/SFMono-Nerd-Font-Ligaturized
 fc-cache -f >/dev/null 2>&1 || log "Warning: Failed to update font cache"
-
-# Backup existing configs
-logo "Backup files"
-log "Backup files will be stored in $BACKUP_FOLDER"
-mkdir -p "$BACKUP_FOLDER" || { log "Error: Failed to create $BACKUP_FOLDER"; exit 1; }
-
-config_folders=(bspwm alacritty picom rofi eww sxhkd dunst polybar ncmpcpp nvim ranger zsh mpd paru)
-firefox_folder="chrome"
-
-for folder in "${config_folders[@]}"; do
-    if [ -d "$HOME/.config/$folder" ]; then
-        mv "$HOME/.config/$folder" "$BACKUP_FOLDER/${folder}_$DATE" && log "$folder backed up successfully at $BACKUP_FOLDER/${folder}_$DATE" || log "Error: Failed to back up $folder"
-    else
-        log "The folder $folder does not exist in $HOME/.config/"
-    fi
-done
-
-[ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$BACKUP_FOLDER/.zshrc-backup-$DATE" && log ".zshrc backed up successfully" || log "Error: Failed to back up .zshrc"
-
-# Copy dotfiles
-logo "Installing dotfiles..."
-mkdir -p ~/.config ~/.local/bin ~/.local/share/applications ~/.local/share/fonts ~/.local/share/asciiart
-
-for dir in ~/dotfiles/config/*; do
-    cp -R "$dir" ~/.config/ && log "$(basename "$dir") copied successfully" || { log "Error: Failed to copy $(basename "$dir")"; exit 1; }
-done
-
-for file in ~/dotfiles/misc/Pictures/*; do
-    cp -R "$file" "$HOME/Pictures/" && log "$(basename "$file") copied successfully" || log "Warning: Failed to copy $(basename "$file")"
-done
 
 # Copy Vim and Tmux configs
 logo "Copy Vim and Tmux Config"
