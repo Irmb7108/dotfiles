@@ -145,12 +145,6 @@ for folder in "${config_folders[@]}"; do
     fi
 done
 
-if compgen -G "$HOME/.mozilla/firefox/*.default-release/$firefox_folder" > /dev/null; then
-    mv "$HOME/.mozilla/firefox/*.default-release/$firefox_folder" "$BACKUP_FOLDER/${firefox_folder}_$DATE" && log "$firefox_folder backed up successfully at $BACKUP_FOLDER/${firefox_folder}_$DATE" || log "Error: Failed to back up $firefox_folder"
-else
-    log "The folder $firefox_folder does not exist in $HOME/.mozilla/firefox/"
-fi
-
 [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$BACKUP_FOLDER/.zshrc-backup-$DATE" && log ".zshrc backed up successfully" || log "Error: Failed to back up .zshrc"
 
 # Copy dotfiles
