@@ -134,6 +134,9 @@ rm -rf ~/.config/nvim
 # Clone LunarVim
 git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
 
+# Install zsh themes
+logo "Install oh-my-zsh"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Change shell to fish
 logo "Changing default shell to fish"
