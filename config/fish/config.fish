@@ -42,3 +42,58 @@ end
 # #           ▐░░░░░  ▐░░░░░  ▀░░░░░  ▓ ░░░   ▒░░░░   ▐░░░░░░░░░░░▀
 # # " |lolcat
 # tdfgo -j center -f yazoox print "IR-MB" |lolcat
+
+# Run #!/bin/bash scripts in Fish without conflict
+function runbash --description 'Run script with bass if shebang is bash'
+    set -l file $argv[1]
+    if not test -f "$file"
+        echo "Error: File not found: $file"
+        return 1
+    end
+    set -l shebang (head -n1 "$file" 2>/dev/null | string trim)
+    if string match -qr 'bash$' "$shebang"
+        __fish_bass source "$file" $argv[2..-1]
+    else
+        command bash "$file" $argv[2..-1]
+    end
+end
+
+# Override the default execution for ./script.sh
+function . --description 'Auto-detect bash scripts'
+    set -l file $argv[1]
+    if not test -f "$file"
+        command . $argv
+        return
+    end
+    set -l shebang (head -n1 "$file" 2>/dev/null | string trim)
+    if string match -qr 'bash$' "$shebang"
+        __fish_bass source "$file" $argv[2..-1]
+    else
+        command . $argv
+    end
+end
+
+# === Safe bass wrapper ===
+function __fish_bass
+    set -l bass_path (type -p bass 2>/dev/null | grep -v "/usr/bin/bass" | head -n1)
+    if test -z "$bass_path"
+        echo "Error: bass plugin not found. Run: fisher install jorgebucaran/bass"
+        return 1
+    end
+    eval "$bass_path $argv"
+end
+
+# === Auto-run #!/bin/bash scripts ===
+function .
+    set -l file $argv[1]
+    if not test -f "$file"
+        command . $argv
+        return
+    end
+    set -l shebang (head -n1 "$file" 2>/dev/null | string trim)
+    if string match -qr 'bash$' "$shebang"
+        __fish_bass source "$file" $argv[2..-1]
+    else
+        command . $argv
+    end
+end
