@@ -140,16 +140,32 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 # Change shell to fish
 logo "Changing default shell to fish"
-if [ "$SHELL" != "/usr/bin/fish" ]; then
-    if command -v fish &> /dev/null; then
-        chsh -s /usr/bin/fish && log "Default shell changed to fish" || { log "Error: Failed to change shell to fish"; exit 1; }
-    else
-        log "Error: fish is not installed"
-        exit 1
-    fi
-else
-    log "Default shell is already fish"
-fi
+logo "Do you want to switch default shell to Fish?"
+echo -e "${BYE}┌──────────────────────────────────────┐${CNC}"
+echo -e "${BYE}│   ${BOLD}Y${CNC}${BYE} = Yes, make Fish default      │"
+echo -e "${BYE}│   ${BOLD}N${CNC}${BYE} = No, stay with Zsh          │"
+echo -e "${BYE}└──────────────────────────────────────┘${CNC}"
+read -rp "$(echo -e "${BCY}➜ Choose [Y/n]: ${CNC}")" answer
+echo
 
-log "Installation completed successfully!"
-printf "%s%sAll done! Please reboot your system.%s\n" "${BLD}" "${CGR}" "${CNC}"
+case "$answer" in
+    [Yy]* | "")
+        if command -v fish &> /dev/null; then
+            chsh -s /usr/bin/fish && \
+                log "Fish is now your default shell! Reboot to activate." || \
+                { log "Failed to change shell"; exit 1; }
+        else
+            log "Fish not found! Install it first: sudo pacman -S fish"
+            exit 1
+        fi
+        ;;
+    [Nn]*)
+        log "No changes. Zsh remains your default shell."
+        ;;
+    *)
+        log "Invalid input. Keeping Zsh."
+        ;;
+esac
+
+log "Setup complete!"
+printf "%s%sAll done! Reboot if you switched.%s\n" "${BLD}" "${CGR}" "${CNC}"
