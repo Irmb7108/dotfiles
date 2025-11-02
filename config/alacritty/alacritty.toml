@@ -5,14 +5,14 @@
 # Theme: dr460nized / Garuda-inspired
 # Ctrl+C/V keybindings
 # ==============================
-[font]
-normal = { family = "LilexNerdFont", style = "Regular" }
-bold = { family = "LilexNerdFont", style = "Bold" }
-italic = { family = "LilexNerdFont", style = "Italic" }
-bold_italic = { family = "LilexNerdFont", style = "Bold Italic" }
-size = 12.0
-offset = { x = 0, y = 1 }
-glyph_offset = { x = 0, y = 0 }
+#[font]
+#normal = { family = "LilexNerdFont", style = "Regular" }
+#bold = { family = "LilexNerdFont", style = "Bold" }
+#italic = { family = "LilexNerdFont", style = "Italic" }
+#bold_italic = { family = "LilexNerdFont", style = "Bold Italic" }
+#size = 12.0
+#offset = { x = 0, y = 1 }
+#glyph_offset = { x = 0, y = 0 }
 
 
 
