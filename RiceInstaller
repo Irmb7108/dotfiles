@@ -140,32 +140,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 # Change shell to fish
 logo "Changing default shell to fish"
-logo "Do you want to switch default shell to Fish?"
+# Ask before switching to Fish (English + Persian support)
 echo -e "${BYE}┌──────────────────────────────────────┐${CNC}"
-echo -e "${BYE}│   ${BOLD}Y${CNC}${BYE} = Yes, make Fish default      │"
-echo -e "${BYE}│   ${BOLD}N${CNC}${BYE} = No, stay with Zsh          │"
+echo -e "${BYE}│   ${BOLD}Y${CNC}${BYE} = Yes → Switch to Fish          │"
+echo -e "${BYE}│   ${BOLD}N${CNC}${BYE} = No  → Keep Zsh               │"
 echo -e "${BYE}└──────────────────────────────────────┘${CNC}"
 read -rp "$(echo -e "${BCY}➜ Choose [Y/n]: ${CNC}")" answer
-echo
-
-case "$answer" in
-    [Yy]* | "")
-        if command -v fish &> /dev/null; then
-            chsh -s /usr/bin/fish && \
-                log "Fish is now your default shell! Reboot to activate." || \
-                { log "Failed to change shell"; exit 1; }
-        else
-            log "Fish not found! Install it first: sudo pacman -S fish"
-            exit 1
-        fi
-        ;;
-    [Nn]*)
-        log "No changes. Zsh remains your default shell."
-        ;;
-    *)
-        log "Invalid input. Keeping Zsh."
-        ;;
-esac
-
-log "Setup complete!"
-printf "%s%sAll done! Reboot if you switched.%s\n" "${BLD}" "${CGR}" "${CNC}"
+case "$answer" in [Yy]*) chsh -s /usr/bin/fish ;; *) echo "Zsh stays!" ;; esac
+read -rp "$(echo -e "${BCY}➜ Reboot now? [Y/n]: ${CNC}")" reboot && [[ $reboot =~ [Yy] ]] && reboot
