@@ -1,0 +1,96 @@
+# ==============================
+# Alacritty Configuration File
+# Enhanced Version
+# Font: SF Mono
+# Theme: dr460nized / Garuda-inspired
+# Ctrl+C/V keybindings
+# ==============================
+[font]
+normal = { family = "LilexNerdFont", style = "Regular" }
+bold = { family = "LilexNerdFont", style = "Bold" }
+italic = { family = "LilexNerdFont", style = "Italic" }
+bold_italic = { family = "LilexNerdFont", style = "Bold Italic" }
+size = 12.0
+offset = { x = 0, y = 1 }
+glyph_offset = { x = 0, y = 0 }
+
+
+
+[colors]
+[colors.primary]
+background = "#101421"
+foreground = "#fffbf6"
+[colors.normal]
+black = "#2e2e2e"
+red = "#eb4129"
+green = "#abe047"
+yellow = "#f6c744"
+blue = "#47a0f3"
+magenta = "#7b5cb0"
+cyan = "#64dbed"
+white = "#e5e9f0"
+[colors.bright]
+black = "#565656"
+red = "#ec5357"
+green = "#c0e17d"
+yellow = "#f9da6a"
+blue = "#49a4f8"
+magenta = "#a47de9"
+cyan = "#99faf2"
+white = "#ffffff"
+[general]
+live_config_reload = true
+# import = [
+#   "./themes/Theme2.toml"
+# ]
+
+[terminal.shell]
+program = "/usr/bin/fish"
+args = ["-l"]
+
+[window]
+startup_mode = "Windowed"
+title = "Alacritty"
+dynamic_title = true
+decorations_theme_variant = "None"
+decorations = "Full"
+opacity = 0.95
+blur = true
+padding = { x = 10, y = 10 }
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[bell]
+animation = "Linear"
+duration = 0
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+save_to_clipboard = true
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+unfocused_hollow = true
+thickness = 0.15
+
+[mouse]
+hide_when_typing = false
+
+
+
+
+
+[keyboard]
+bindings = [
+  # Paste با Ctrl+V
+  { key = "v", mods = "Control", action = "Paste" },
+
+  # Copy با Ctrl+C
+  { key = "c", mods = "Control", action = "Copy" },
+
+  # Clear selection با Ctrl+X
+  { key = "x", mods = "Control", action = "ClearSelection" },
+]
+ 
