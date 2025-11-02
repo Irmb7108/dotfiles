@@ -69,7 +69,7 @@ packages=(
     kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
     harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop
     gedit vlc figlet ipython feh geany jgmenu redshift simplescreenrecorder flameshot
-    audacious mpd ncmpcpp atril engrampa pluma rhythmbox freetube-bin tty-clock
+    audacious mpd ncmpcpp atril engrampa pluma rhythmbox freetube-bin tty-clock node npm
 )
 
 # # Install git if not present
@@ -128,16 +128,12 @@ cp -f ~/dotfiles/home/.vimrc "$HOME" && log ".vimrc copied successfully" || log 
 [ ! -d "$HOME/.vim_runtime" ] && cp -R ~/dotfiles/home/.vim_runtime "$HOME" && log ".vim_runtime copied successfully" || log "Error: Failed to copy .vim_runtime"
 mv ~/dotfiles/home/tmux.conf ~/dotfiles/home/.tmux.conf 2>/dev/null && cp -f ~/dotfiles/home/.tmux.conf "$HOME" && log ".tmux.conf copied successfully" || log "Error: Failed to copy .tmux.conf"
 
-# Install LunarVim
-logo "Cloning LunarVim..."
+# Install NvChad
+logo "Cloning NvChad..."
 rm -rf ~/.config/nvim
 # Clone LunarVim
-git clone https://github.com/LunarVim/LunarVim.git ~/.config/nvim
+git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
 
-# Download config.lua
-wget -O ~/.config/nvim/config.lua https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/config.lua 
-# Download dashboard.lua
-wget -P ~/.config/nvim/lua/lvim/core/alpha/ https://raw.githubusercontent.com/Irmb7108/lunarvim-custum/main/dashboard.lua.lua
 
 # Change shell to fish
 logo "Changing default shell to fish"
