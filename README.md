@@ -54,3 +54,26 @@ sh
 ./RiceInstaller
 - Telegram Desktop Themes:
 👌🏻 https://t.me/addtheme/ctp_mocha
+
+
+## 🎵 Best Music Players (Auto-Installed)
+
+Your Rice now installs **8 legendary players** with one click!  
+
+| Player | Why? | Command |
+|--------|------|---------|
+| **Tauon** | Gallery like iTunes + Dark mode | `tauon` |
+| **Strawberry** | 10k+ songs library + Last.fm | `strawberry` |
+| **Lollipop** | Material You + Gapless | `lollipop` |
+| **Quod Libet** | Regex search + Tag editor | `quodlibet` |
+| **Elisa** | KDE native + Phone sync | `elisa` |
+| **cmus** | Vim keys in terminal | `cmus` |
+| **ncmpcpp** | Control music from phone | `ncmpcpp` |
+| **mpg123** | One-liner: `mpg123 *.flac` | `mpg123` |
+
+**Shortcuts in Tauon:**  
+`Ctrl+L` → Album wall  
+`Ctrl+K` → Instant search  
+`Space` → Play/Pause  
+
+> All installed by `./RiceInstaller` — just run it again!
