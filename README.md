@@ -75,5 +75,7 @@ Your Rice now installs **8 legendary players** with one click!
 `Ctrl+L` → Album wall  
 `Ctrl+K` → Instant search  
 `Space` → Play/Pause  
+`yay -S tauon-music-box`
+`sudo pacman -S --needed --noconfirm strawberry lollipop elisa quodlibet cmus ncmpcpp mpd mpg123`
 
 > All installed by `./RiceInstaller` — just run it again!
