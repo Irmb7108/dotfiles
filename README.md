@@ -41,7 +41,6 @@ This repository contains my personal dotfiles for configuring a customized Arch 
 
 ## 💾 Installation
 
-
 <b>Open a terminal in HOME</b>
 - First download the installer
 sh
@@ -58,7 +57,6 @@ sh
 👌🏻 https://t.me/addtheme/ctp_mocha
 ------------------------------
 ## 🎵 Best Music Players (Auto-Installed)
-
 `yay -S tauon-music-box`
 
 `sudo pacman -S --needed --noconfirm strawberry lollipop elisa quodlibet cmus ncmpcpp mpd mpg123`
@@ -66,4 +64,4 @@ sh
 > All installed by `./RiceInstaller` — just run it again!
 
 ## Best image viewver for arch
-yay -S nomacs
+`yay -S nomacs`
