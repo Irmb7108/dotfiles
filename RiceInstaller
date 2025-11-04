@@ -63,7 +63,7 @@ sudo pacman -Syyu --noconfirm || { log "Error: System update failed"; exit 1; }
 # List of packages
 # logo "Installing needed packages..."
 packages=(
-    base-devel git go yay firefox zsh neovim proton-vpn-gtk-app psmisc bat man
+    base-devel git go yay firefox zsh neovim proton-vpn-gtk-app psmisc bat man nomacs
     cherry-kde-git kvantum-theme-cherry-git kvantum starship net-tools sublime-text
     lolcat tmux thinlinc remmina htop wezterm exa gimp key-mon fzf viewnior
     kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
