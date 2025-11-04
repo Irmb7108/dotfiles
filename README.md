@@ -64,3 +64,6 @@ sh
 `sudo pacman -S --needed --noconfirm strawberry lollipop elisa quodlibet cmus ncmpcpp mpd mpg123`
 
 > All installed by `./RiceInstaller` — just run it again!
+
+## Best image viewver for arch
+yay -S nomacs
