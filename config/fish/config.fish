@@ -7,6 +7,8 @@ source ~/.config/fish/backup_files.fish
 starship init fish | source
 alias backup='chmod +x ~/.config/fish/scrips/backup-files/backup.sh && ~/.config/fish/scrips/backup-files/backup.sh'
 #alias backup='~/.config/fish/scrips/backup-files/backup.sh'
+alias fix-maximized='kwriteconfig6 --file ~/.config/kwinrc --group Windows --key BorderlessMaximizedWindows false && echo "BorderlessMaximizedWindows set to false ✅"'
+
 abbr con 'ping -c 5 8.8.8.8' # Check network
 abbr myip 'curl ifconfig.co' # Print public IP
 abbr untar 'tar -zxvf'
