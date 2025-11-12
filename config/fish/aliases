@@ -178,3 +178,6 @@ alias cat="bat --theme=base16 --style=plain --paging=never"
 alias tree="ls --tree"
 alias catt='bat --style header --style snip --style changes --style header'
 alias vram='glxinfo | grep -i "video memory"'
+#fix windows on kde with maximazed
+alias fix-maximized='kwriteconfig6 --file ~/.config/kwinrc --group Windows --key BorderlessMaximizedWindows false && echo "BorderlessMaximizedWindows set to false ✅"'
+
