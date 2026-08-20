@@ -2,7 +2,7 @@
   <img src="https://github.com/Irmb7108/filed/blob/main/dotfiles-logo.svg" width="512">
 </p>
 
-<h1 align="center">IR-MB's Dotfiles</h1>
+<h1 align="center">IR-MB' Dotfiles</h1>
 <p align="center">
   My personal dotfiles for a customized Arch Linux setup with a sleek and productive environment.
 </p>
