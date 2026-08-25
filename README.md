@@ -54,7 +54,7 @@ sh
 ./RiceInstaller
 --------------------
 - Telegram Desktop Themes:
-👌🏻 https://t.me/addtheme/ctp_mocha
+👌🏻 [https://t.me/addtheme/ctp_mocha](https://t.me/addtheme/nZ1WFr1i3PT26CmP)
 ------------------------------
 ## 🎵 Best Music Players (Auto-Installed)
 `yay -S tauon-music-box`
