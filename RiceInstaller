@@ -133,6 +133,58 @@ case "$answer" in
         log "Shell kept as default"
         ;;
 esac
+# Install ytdl-gui
+logo "ytdl-gui Installation"
+read -rp "$(echo -e "${CBL}➜ Do you want to install ytdl-gui? [y/N]: ${CNC}")" install_ytdl
+if [[ $install_ytdl =~ ^[Yy]$ ]]; then
+    log "Installing ytdl-gui and its dependencies..."
+
+    # Install core system dependencies
+    yay -S --needed --noconfirm python python-pip yt-dlp ffmpeg python-pyqt6
+
+    rm -rf /tmp/ytdl-gui
+    git clone https://github.com/Irmb7108/ytdl-gui.git /tmp/ytdl-gui || log "Error: Failed to clone ytdl-gui"
+
+    # Install python requirements if exists
+    if [ -f "/tmp/ytdl-gui/requirements.txt" ]; then
+        pip install -r /tmp/ytdl-gui/requirements.txt --break-system-packages 2>/dev/null || pip install -r /tmp/ytdl-gui/requirements.txt
+    fi
+
+    # Setup application files
+    if [ -f "/tmp/ytdl-gui/setup.py" ]; then
+        pip install /tmp/ytdl-gui --break-system-packages 2>/dev/null || pip install /tmp/ytdl-gui
+    elif [ -f "/tmp/ytdl-gui/install.sh" ]; then
+        chmod +x /tmp/ytdl-gui/install.sh
+        bash /tmp/ytdl-gui/install.sh
+    else
+        mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications"
+        rm -rf "$HOME/.local/share/ytdl-gui"
+        cp -r /tmp/ytdl-gui "$HOME/.local/share/ytdl-gui"
+        find "$HOME/.local/share/ytdl-gui" -maxdepth 2 -type f -name "*.py" -exec chmod +x {} \;
+
+        # Create executable symlink in ~/.local/bin
+        main_file=$(find "$HOME/.local/share/ytdl-gui" -maxdepth 2 -type f -name "main.py" -o -name "app.py" -o -name "*gui*.py" | head -n 1)
+        if [ -n "$main_file" ]; then
+            ln -sf "$main_file" "$HOME/.local/bin/ytdl-gui"
+
+            # Create Desktop Entry for App Launcher / Rofi
+            cat <<EOF > "$HOME/.local/share/applications/ytdl-gui.desktop"
+[Desktop Entry]
+Name=YTDL GUI
+Comment=YouTube Downloader GUI
+Exec=python3 $main_file
+Icon=download
+Terminal=false
+Type=Application
+Categories=AudioVideo;Network;
+EOF
+            chmod +x "$HOME/.local/share/applications/ytdl-gui.desktop"
+        fi
+    fi
+
+    rm -rf /tmp/ytdl-gui
+    log "ytdl-gui setup completed."
+fi
 
 read -rp "$(echo -e "${CBL}➜ Reboot now? [y/N]: ${CNC}")" reboot_choice
-[[ $reboot_choice =~ [Yy] ]] && sudo reboot
+[[ $reboot_choice =~ ^[Yy]$ ]] && sudo reboot
