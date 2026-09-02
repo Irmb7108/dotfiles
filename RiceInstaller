@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script to install dotfiles
+# Script to install dotfiles & personal environment
 # Author: IR-MB
 # URL: https://github.com/Irmb7108/dotfiles
 
@@ -12,20 +12,16 @@ BLD=$(tput bold)
 CNC=$(tput sgr0)
 
 # Paths
-BACKUP_FOLDER="$HOME/.RiceBackup"
-DATE=$(date +%Y%m%d-%H%M%S)
+BACKUP_FOLDER="$HOME/.RiceBackup/$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="$HOME/dotfiles_install.log"
 
-# Function to log messages
 log() {
     echo "$(date): $1" | tee -a "$LOG_FILE"
 }
 
-# Function to display logo
 logo() {
     local text="${1:?}"
-    echo -e "\n\n\033[38;5;70m\033[1;31m\033[3m\
-        \033[1;32m
+    echo -e "\n\033[1;32m
             ██╗██████╗       ███╗   ███╗██████╗
             ██║██╔══██╗      ████╗ ████║██╔══██╗
             ██║██████╔╝█████╗██╔████╔██║██████╔╝
@@ -33,118 +29,110 @@ logo() {
             ██║██║  ██║      ██║ ╚═╝ ██║██████╔╝
             ╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝
           \033[0m               Author: IR-MB
-                   https://github.com/Irmb7108/dotfiles\n\n"
-    echo -e "\033[1;32m${text}\033[0m"
+                   https://github.com/Irmb7108/dotfiles\n"
+    echo -e "\033[1;32m${text}\033[0m\n"
 }
 
 # Check if running as root
 if [ "$(id -u)" = 0 ]; then
-    log "Error: This script MUST NOT be run as root user."
+    echo "${CRE}Error: This script MUST NOT be run as root user.${CNC}"
     exit 1
 fi
 
-# Welcome message
 logo "Welcome!"
-printf '\e[31mThis script installs dependencies, clones dotfiles, backs up existing configs, and copies new files. It does not modify system configurations. Root password may be required for dependencies or shell change.\n\n\e[0m'
+printf "${CRE}This script will backup existing configs, install packages, personal LazyVim, and setup dotfiles.\n\n${CNC}"
 while true; do
     read -rp "Do you wish to continue? [y/N]: " yn
     case $yn in
         [Yy]* ) break ;;
         [Nn]* ) exit ;;
-        * ) printf "Error: just write 'y' or 'n'\n\n" ;;
+        * ) printf "Please enter 'y' or 'n'\n" ;;
     esac
 done
 clear
 
 # Update system
-logo "Update System Package"
-sudo pacman -Syyu --noconfirm || { log "Error: System update failed"; exit 1; }
+logo "Updating System Packages"
+sudo pacman -Syu --noconfirm || { log "Error: System update failed"; exit 1; }
 
-# List of packages
-# logo "Installing needed packages..."
-packages=(
-    base-devel git go yay firefox zsh neovim proton-vpn-gtk-app psmisc bat man nomacs
-    cherry-kde-git kvantum-theme-cherry-git kvantum starship net-tools sublime-text
-    lolcat tmux thinlinc remmina htop wezterm exa gimp key-mon fzf viewnior
-    kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
-    harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop
-    gedit vlc figlet ipython feh geany jgmenu redshift simplescreenrecorder flameshot
-    audacious mpd ncmpcpp atril engrampa pluma rhythmbox freetube-bin tty-clock node npm tauon-music-box elisa karing-bin xclip xsel
-)
-
-# # Install git if not present
-# if ! command -v git &> /dev/null; then
-#     log "Installing git..."
-#     sudo pacman -S --noconfirm git || { log "Error: Failed to install git"; exit 1; }
-#     log "git installed successfully."
-# fi
-
-# Install yay if not present
+# Install yay if missing
 if ! command -v yay &> /dev/null; then
-    log "Installing yay..."
-    cd /tmp
-    git clone https://aur.archlinux.org/yay-bin.git || { log "Error: Failed to clone yay"; exit 1; }
-    cd yay-bin
-    makepkg -si --noconfirm || { log "Error: Failed to install yay"; exit 1; }
-    cd
+    logo "Installing yay"
+    sudo pacman -S --needed --noconfirm base-devel git || exit 1
+    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    (cd /tmp/yay-bin && makepkg -si --noconfirm)
     rm -rf /tmp/yay-bin
-    log "yay installed successfully."
 fi
 
-# Install packages
-for package in "${packages[@]}"; do
-    if ! pacman -Qq "$package" &> /dev/null; then
-        log "Installing package: $package"
-        yay -S --noconfirm "$package" || log "Warning: Failed to install $package"
-    else
-        log "Package $package is already installed"
+# Packages List
+packages=(
+    base-devel git go firefox zsh neovim psmisc bat man nomacs
+    starship net-tools sublime-text lolcat tmux htop eza gimp key-mon fzf viewnior
+    kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
+    harmonoid-bin tilix spotify tabby-bin discord telegram-desktop
+    gedit vlc figlet ipython feh simplescreenrecorder flameshot
+    audacious mpd ncmpcpp atril engrampa freetube-bin tty-clock nodejs npm
+    karing-bin xclip xsel
+)
+
+logo "Installing Packages"
+yay -S --needed --noconfirm "${packages[@]}"
+
+# Backup existing configs
+logo "Backing Up Existing Configurations"
+mkdir -p "$BACKUP_FOLDER"
+for cfg in bspwm polybar sxhkd alacritty kitty fish nvim rofi picom dunst; do
+    if [ -d "$HOME/.config/$cfg" ]; then
+        mv "$HOME/.config/$cfg" "$BACKUP_FOLDER/" && log "Backed up $cfg to $BACKUP_FOLDER"
     fi
 done
 
+# Clone and copy dotfiles
+logo "Downloading Dotfiles"
+rm -rf "$HOME/dotfiles"
+git clone --depth=1 https://github.com/Irmb7108/dotfiles.git "$HOME/dotfiles" || { log "Error: Failed to clone dotfiles"; exit 1; }
 
+mkdir -p "$HOME/.config"
+[ -d "$HOME/dotfiles/.config" ] && cp -r "$HOME/dotfiles/.config/"* "$HOME/.config/" 2>/dev/null
+[ -f "$HOME/dotfiles/home/.vimrc" ] && cp -f "$HOME/dotfiles/home/.vimrc" "$HOME/"
+[ -f "$HOME/dotfiles/home/tmux.conf" ] && cp -f "$HOME/dotfiles/home/tmux.conf" "$HOME/.tmux.conf"
 
-# Clone dotfiles
-logo "Downloading dotfiles"
-[ -d ~/dotfiles ] && rm -rf ~/dotfiles
-log "Cloning dotfiles from https://github.com/Irmb7108/dotfiles"
-cd || exit 1
-git clone --depth=1 https://github.com/Irmb7108/dotfiles || { log "Error: Failed to clone dotfiles"; exit 1; }
-
-# Install fonts
-logo "Downloading font"
-if [ ! -d ~/.local/share/fonts ]; then
-mkdir -p ~/.local/share/fonts
+# Fonts
+logo "Installing Fonts"
+mkdir -p "$HOME/.local/share/fonts"
+if [ ! -d "/tmp/SFMono-Fonts" ]; then
+    git clone --depth=1 https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git /tmp/SFMono-Fonts
+    find /tmp/SFMono-Fonts -name "*.ttf" -exec cp {} "$HOME/.local/share/fonts/" \;
+    rm -rf /tmp/SFMono-Fonts
+    fc-cache -f >/dev/null 2>&1
 fi
-if [ ! -d ~/SFMono-Nerd-Font-Ligaturized ]; then
-    git clone https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git ~/SFMono-Nerd-Font-Ligaturized || { log "Error: Failed to clone font repository"; exit 1; }
+
+# Personal LazyVim
+logo "Installing Personal LazyVim"
+rm -rf "$HOME/.config/nvim"
+git clone https://github.com/Irmb7108/nvim.git "$HOME/.config/nvim" && log "Personal LazyVim installed successfully"
+
+# Oh My Zsh (Non-blocking unattended mode)
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    logo "Installing Oh-My-Zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
-find ~/SFMono-Nerd-Font-Ligaturized -name "*.ttf" -exec cp {} ~/.local/share/fonts/ \; || log "Warning: Failed to copy some fonts"
-rm -rf ~/SFMono-Nerd-Font-Ligaturized
-fc-cache -f >/dev/null 2>&1 || log "Warning: Failed to update font cache"
 
-# Copy Vim and Tmux configs
-logo "Copy Vim and Tmux Config"
-cp -f ~/dotfiles/home/.vimrc "$HOME" && log ".vimrc copied successfully" || log "Error: Failed to copy .vimrc"
-[ ! -d "$HOME/.vim_runtime" ] && cp -R ~/dotfiles/home/.vim_runtime "$HOME" && log ".vim_runtime copied successfully" || log "Error: Failed to copy .vim_runtime"
-mv ~/dotfiles/home/tmux.conf ~/dotfiles/home/.tmux.conf 2>/dev/null && cp -f ~/dotfiles/home/.tmux.conf "$HOME" && log ".tmux.conf copied successfully" || log "Error: Failed to copy .tmux.conf"
+# Shell Choice
+logo "Shell Configuration"
+echo -e "${CYE}┌──────────────────────────────────────┐${CNC}"
+echo -e "${CYE}│   ${BLD}Y${CNC}${CYE} = Yes → Switch to Fish           │"
+echo -e "${CYE}│   ${BLD}N${CNC}${CYE} = No  → Keep Current/Zsh         │"
+echo -e "${CYE}└──────────────────────────────────────┘${CNC}"
+read -rp "$(echo -e "${CBL}➜ Set Fish as default shell? [Y/n]: ${CNC}")" answer
+case "$answer" in
+    [Yy]* ) 
+        chsh -s "$(which fish)" && log "Default shell changed to fish"
+        ;;
+    * ) 
+        log "Shell kept as default"
+        ;;
+esac
 
-# Install NvChad
-logo "Cloning NvChad..."
-rm -rf ~/.config/nvim
-# Clone LunarVim
-git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
-
-# Install zsh themes
-logo "Install oh-my-zsh"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Change shell to fish
-logo "Changing default shell to fish"
-# Ask before switching to Fish (English + Persian support)
-echo -e "${BYE}┌──────────────────────────────────────┐${CNC}"
-echo -e "${BYE}│   ${BOLD}Y${CNC}${BYE} = Yes → Switch to Fish          │"
-echo -e "${BYE}│   ${BOLD}N${CNC}${BYE} = No  → Keep Zsh               │"
-echo -e "${BYE}└──────────────────────────────────────┘${CNC}"
-read -rp "$(echo -e "${BCY}➜ Choose [Y/n]: ${CNC}")" answer
-case "$answer" in [Yy]*) chsh -s /usr/bin/fish ;; *) echo "Zsh stays!" ;; esac
-read -rp "$(echo -e "${BCY}➜ Reboot now? [Y/n]: ${CNC}")" reboot && [[ $reboot =~ [Yy] ]] && reboot
+read -rp "$(echo -e "${CBL}➜ Reboot now? [y/N]: ${CNC}")" reboot_choice
+[[ $reboot_choice =~ [Yy] ]] && sudo reboot
