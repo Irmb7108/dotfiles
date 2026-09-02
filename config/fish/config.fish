@@ -131,3 +131,26 @@ function gpush
     git commit -m "$msg"
     git push -u origin (git branch --show-current)
 end
+
+
+# Quick Git Setup: Initialize repo, link to GitHub, and initial push -> ginit <repo-name> [commit-message]
+function ginit
+    if test (count $argv) -eq 0
+        echo "Usage: ginit <repo-name> [commit-message]"
+        return 1
+    end
+
+    set -l repo $argv[1]
+    set -l msg "Initial commit"
+    if test (count $argv) -ge 2
+        set msg $argv[2..-1]
+    end
+
+    git init
+    git branch -M main
+    git remote remove origin 2>/dev/null
+    git remote add origin "https://github.com/Irmb7108/$repo.git"
+    git add .
+    git commit -m "$msg"
+    git push -u origin main
+end
