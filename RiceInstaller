@@ -69,7 +69,7 @@ packages=(
     kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
     harmonoid-bin tilix spicetify-cli-git spotify tabby-bin discord telegram-desktop
     gedit vlc figlet ipython feh geany jgmenu redshift simplescreenrecorder flameshot
-    audacious mpd ncmpcpp atril engrampa pluma rhythmbox freetube-bin tty-clock node npm tauon-music-box elisa
+    audacious mpd ncmpcpp atril engrampa pluma rhythmbox freetube-bin tty-clock node npm tauon-music-box elisa karing-bin
 )
 
 # # Install git if not present
