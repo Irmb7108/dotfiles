@@ -21,29 +21,29 @@ alias installvpn='yay -S nekoray-bin'
 #   end
 #   git clone --branch $branch $argv[1]
 # end
-set -gx CHATGPT_API_KEY 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
 #download in GitHub file in commands scripts 
 function gcb
-  set branch "master"
-  read -P "Enter GitHub repository link: " repo_link
-  read -P "Enter target directory name: " dir_name
-  if test -n "$argv[2]"
-    set branch $argv[2]
-  end
-  git clone --branch $branch $repo_link $dir_name
+    set branch master
+    read -P "Enter GitHub repository link: " repo_link
+    read -P "Enter target directory name: " dir_name
+    if test -n "$argv[2]"
+        set branch $argv[2]
+    end
+    git clone --branch $branch $repo_link $dir_name
 end
-# # echo "
+echo "
 
-# #           ▀▀▀▀       ▀■▄▄▄       ▐■▄       ░░░░      ▀▄▄▄     
-# #           ▐▓██▓▌  ▐▓██▓▓█▓▓▓▄▄▄   █▄▒▒▄▄ ▄▄▓▒█▓▓  ▐▓██▓▓▓███▄▄ 
-# #           ▐▒▓▓▓▌  ▐▒▓▓▓██████▓█▌  ▓▒░░▒░▄█▓█░░▒▌  ▐▒▓▓▓███░░░█▌
-# #           ▐░▒▒▒▌  ▐░▒▒▒▀▀▀ ▒▓░░▌  ▒▓▓▓▀██▀▀▓▓▓░▒  ▐░▒▒▒▀▀▀▓▒▒▒▓
-# #           ▐░░░░▌  ▐░░░░█  ▄▓▓▓▓█  ░░▒▒▌▐▓ ▐░░░█░  ▐░░░░   ▀▀██▀
-# #           ▀▒▓▓▓▌  ▀▒▓▓▓░▄▒▓▓▓▀▀▀  ▓▓░░▒ ░ ░▓▓▓░▀  ▀▒▓▓░█░░▒▓▓▄ 
-# #           ▐▒▒▒▒▌  ▐▒▒▒▒▌▀▀▓▓▄▄    ░░▓▓▓   ░▒▒▒░▌  ▐▒▒▒▒▄  ▄▒▓▓▓
-# #           ▐░░░░░  ▐░░░░░  ▀░░░░░  ▓ ░░░   ▒░░░░   ▐░░░░░░░░░░░▀
-# # " |lolcat
-# tdfgo -j center -f yazoox print "IR-MB" |lolcat
+           ▀▀▀▀       ▀■▄▄▄       ▐■▄       ░░░░      ▀▄▄▄     
+           ▐▓██▓▌  ▐▓██▓▓█▓▓▓▄▄▄   █▄▒▒▄▄ ▄▄▓▒█▓▓  ▐▓██▓▓▓███▄▄ 
+           ▐▒▓▓▓▌  ▐▒▓▓▓██████▓█▌  ▓▒░░▒░▄█▓█░░▒▌  ▐▒▓▓▓███░░░█▌
+           ▐░▒▒▒▌  ▐░▒▒▒▀▀▀ ▒▓░░▌  ▒▓▓▓▀██▀▀▓▓▓░▒  ▐░▒▒▒▀▀▀▓▒▒▒▓
+           ▐░░░░▌  ▐░░░░█  ▄▓▓▓▓█  ░░▒▒▌▐▓ ▐░░░█░  ▐░░░░   ▀▀██▀ 
+           ▀▒▓▓▓▌  ▀▒▓▓▓░▄▒▓▓▓▀▀▀  ▓▓░░▒ ░ ░▓▓▓░▀  ▀▒▓▓░█░░▒▓▓▄ 
+           ▐▒▒▒▒▌  ▐▒▒▒▒▌▀▀▓▓▄▄    ░░▓▓▓   ░▒▒▒░▌  ▐▒▒▒▒▄  ▄▒▓▓▓
+           ▐░░░░░  ▐░░░░░  ▀░░░░░  ▓ ░░░   ▒░░░░   ▐░░░░░░░░░░░▀
+ " ⚡ Arch Linux Environment :: Stay Creative | lolcat
+echo ""
+#tdfgo -j center -f yazoox print IR-MB | lolcat
 
 # Run #!/bin/bash scripts in Fish without conflict
 function runbash --description 'Run script with bass if shebang is bash'
@@ -98,4 +98,45 @@ function .
     else
         command . $argv
     end
+end
+
+# added by atomic-agent installer
+set -gx PATH $HOME/.local/bin $PATH
+
+function clone
+    set -l target_dir "$HOME/Downloads/newfile"
+    mkdir -p $target_dir
+    cd $target_dir
+
+    if test (count $argv) -eq 0
+        echo "replace SEND LINK"
+        return 1
+    end
+
+    if git clone $argv
+        set -l repo_name (basename (string replace -r '\.git/?$' '' $argv[1]))
+        if test -d "$repo_name"
+            cd "$repo_name"
+            ls
+        end
+    end
+end
+
+# GitHub Auth Helper
+set -gx GITHUB_TOKEN YOUR_TOKEN
+set -gx GITHUB_USER Irmb7108
+
+function git-link
+    if test (count $argv) -eq 0
+        echo "Usage: git-link <repo-name>"
+        return 1
+    end
+    git remote add origin "https://$GITHUB_USER:$GITHUB_TOKEN@github.com/$GITHUB_USER/$argv[1].git"
+    echo "Linked to https://github.com/$GITHUB_USER/$argv[1].git with token!"
+end
+
+function gpush
+    git add .
+    git commit -m (test (count $argv) -gt 0; and echo "$argv"; or echo "update")
+    git push -u origin (git branch --show-current)
 end
