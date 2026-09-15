@@ -166,10 +166,14 @@ end
 function gh-folder
     set url $argv[1]
     set dest $argv[2]
+    
+    set clean_path (string replace -r '^https?://github.com/' '' $url | string replace -r '/tree/[^/]+/' '/')
     if test -z "$dest"
-        set dest "."
+        set dest (basename $clean_path)
     end
 
+    npx degit $clean_path $dest --force
+end
     set clean_path (string replace -r '^https?://github.com/' '' $url | string replace -r '/tree/[^/]+/' '/')
     npx degit $clean_path $dest
 end
