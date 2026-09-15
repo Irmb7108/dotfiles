@@ -72,7 +72,7 @@ alias fgrep="fgrep --color=auto"
 alias rg="rg --sort path --no-ignore --hidden"
 
 # ==========================================
-# Editors & Multiplexers
+# Editors, Multiplexers & Terminal Apps
 # ==========================================
 alias nv="nvim"
 alias vi="nvim"
@@ -82,15 +82,36 @@ alias ra="ranger"
 alias py3="python3"
 
 # ==========================================
-# Hardware, Process & System Monitoring
+# System Logs & Troubleshooting (Like jctl)
+# ==========================================
+alias jctl="journalctl -p 3 -xb"
+alias jlive="journalctl -f"
+alias failed="systemctl --failed"
+alias blame="systemd-analyze blame | head -n 15"
+alias dmesg-err="sudo dmesg -T --level=err,warn | tail -n 25"
+
+# ==========================================
+# Network & Connectivity
+# ==========================================
+alias ping="ping -c 4"
+alias pingfast="ping -c 5 -i 0.2 1.1.1.1"
+alias ports="sudo ss -tulpn"
+alias mynet="ip -brief address"
+
+# ==========================================
+# Hardware, Process & Performance Monitoring
 # ==========================================
 alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
 alias mem="ps axch -o cmd:15,%mem --sort=-%mem | head"
+alias topmem="ps aux --sort=-%mem | head -n 6"
+alias topcpu="ps aux --sort=-%cpu | head -n 6"
 alias df="df -h"
+alias dfclean="df -h -x tmpfs -x devtmpfs -x efivarfs"
+alias big="du -ah . 2>/dev/null | sort -rh | head -n 10"
 alias vram='glxinfo | grep -i "video memory"'
+alias temp="sensors 2>/dev/null || vram"
 alias psmem="sudo ps_mem | grep -E 'Program|awesome|picom|zsh|alacritty|---'"
 alias ka="killall"
-alias jctl="journalctl -p 3 -xb"
 alias g="gotop"
 
 # ==========================================
@@ -119,25 +140,18 @@ alias pacs="yay -Q | wc -l"
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 alias riplong="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -3000 | nl"
 
-# Reflector (Mirrors)
-#alias mirror="sudo reflector -f 10 -l 10 --number 10 --verbose --save /etc/pacman.d/mirrorlist"
-#alias mirrora="sudo reflector --latest 30 --number 10 --sort age --save /etc/pacman.d/mirrorlist"
-#alias mirrord="sudo reflector --latest 30 --number 10 --sort delay --save /etc/pacman.d/mirrorlist"
-#alias mirrors="sudo reflector --latest 30 --number 10 --sort score --save /etc/pacman.d/mirrorlist"
 
-# FZF Search Helpers (Yay)
+# FZF Search Helpers (Yay - Optimized for Fish)
 alias paci="yay -Slq | fzf --color=16 -m --preview 'yay -Si {1}' --preview-window=right:65%:wrap | xargs -ro yay -S --needed"
 alias pacr="yay -Qq | fzf --color=16 -m --preview 'yay -Qi {1}' | xargs -ro yay -Rns"
 alias pac="yay -Q | fzf --color=16"
 
 # ==========================================
-# Network, Security & Git
+# Security & Git Helpers
 # ==========================================
-alias ping="ping -c 4"
 alias gpgexportprivkey="gpg --export-secret-keys --armor"
 alias gpgimportkey="gpg --import"
 alias gpglistkeys="gpg --list-keys --keyid-format LONG"
-
 alias gc="git clone"
 alias git-rm="git ls-files --deleted -z | xargs -0 git rm"
 alias dot="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
