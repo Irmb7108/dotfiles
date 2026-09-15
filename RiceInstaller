@@ -3,11 +3,20 @@
 # Author: IR-MB
 # URL: https://github.com/Irmb7108/dotfiles
 
-# Colors
+# Check Arguments for Test Mode
+if [[ "$1" == "--test" || "$1" == "--dry-run" || "$DRY_RUN" == "1" ]]; then
+    DRY_RUN=1
+else
+    DRY_RUN=0
+fi
+
+# Colors & Formatting
 CRE=$(tput setaf 1)
-CYE=$(tput setaf 3)
 CGR=$(tput setaf 2)
+CYE=$(tput setaf 3)
 CBL=$(tput setaf 4)
+CMG=$(tput setaf 5)
+CCY=$(tput setaf 6)
 BLD=$(tput bold)
 CNC=$(tput sgr0)
 
@@ -16,11 +25,25 @@ BACKUP_FOLDER="$HOME/.RiceBackup/$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="$HOME/dotfiles_install.log"
 
 log() {
-    echo "$(date): $1" | tee -a "$LOG_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S'): $1" >> "$LOG_FILE"
 }
 
-logo() {
-    local text="${1:?}"
+msg_info()    { echo -e "  ${CBL}ℹ${CNC}  $*"; log "[INFO] $*"; }
+msg_ok()      { echo -e "  ${CGR}✔${CNC}  $*"; log "[OK] $*"; }
+msg_warn()    { echo -e "  ${CYE}⚠${CNC}  $*"; log "[WARN] $*"; }
+msg_err()     { echo -e "  ${CRE}✖${CNC}  $*"; log "[ERROR] $*"; }
+
+run_cmd() {
+    if [ "$DRY_RUN" = "1" ]; then
+        echo -e "      ${CYE}[DRY-RUN]${CNC} $*"
+        log "[DRY-RUN] $*"
+        return 0
+    else
+        "$@"
+    fi
+}
+
+banner() {
     echo -e "\n\033[1;32m
             ██╗██████╗       ███╗   ███╗██████╗
             ██║██╔══██╗      ████╗ ████║██╔══██╗
@@ -30,38 +53,54 @@ logo() {
             ╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝
           \033[0m               Author: IR-MB
                    https://github.com/Irmb7108/dotfiles\n"
-    echo -e "\033[1;32m${text}\033[0m\n"
+    if [ "$DRY_RUN" = "1" ]; then
+        echo -e "  ${CYE}╔═════════════════════════════════════════════════════════╗${CNC}"
+        echo -e "  ${CYE}║   ⚙  MODE: SIMULATION / DRY RUN (SAFE PREVIEW)         ║${CNC}"
+        echo -e "  ${CYE}╚═════════════════════════════════════════════════════════╝${CNC}\n"
+    fi
+}
+
+section() {
+    local title="${1:?}"
+    echo -e "\n${CCY}╭─────────────────────────────────────────────────────────────╮${CNC}"
+    echo -e "${CCY}│${CNC}  ${BLD}${title}${CNC}"
+    echo -e "${CCY}╰─────────────────────────────────────────────────────────────╯${CNC}"
+    log "=== Phase: $title ==="
 }
 
 # Check if running as root
 if [ "$(id -u)" = 0 ]; then
-    echo "${CRE}Error: This script MUST NOT be run as root user.${CNC}"
+    msg_err "This script MUST NOT be run as root user."
     exit 1
 fi
 
-logo "Welcome!"
-printf "${CRE}This script will backup existing configs, install packages, personal LazyVim, and setup dotfiles.\n\n${CNC}"
+banner
+echo -e "  ${CMG}This script will backup configs, install packages, personal LazyVim, and setup dotfiles.${CNC}\n"
 while true; do
-    read -rp "Do you wish to continue? [y/N]: " yn
+    read -rp "  $(echo -e "${CBL}➜ Do you wish to continue? [y/N]: ${CNC}")" yn
     case $yn in
         [Yy]* ) break ;;
         [Nn]* ) exit ;;
-        * ) printf "Please enter 'y' or 'n'\n" ;;
+        * ) msg_warn "Please enter 'y' or 'n'" ;;
     esac
 done
 clear
+banner
 
 # Update system
-logo "Updating System Packages"
-sudo pacman -Syu --noconfirm || { log "Error: System update failed"; exit 1; }
+section "Updating System Packages"
+msg_info "Synchronizing repositories and updating Arch Linux..."
+run_cmd sudo pacman -Syu --noconfirm
 
 # Install yay if missing
 if ! command -v yay &> /dev/null; then
-    logo "Installing yay"
-    sudo pacman -S --needed --noconfirm base-devel git || exit 1
-    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-    (cd /tmp/yay-bin && makepkg -si --noconfirm)
-    rm -rf /tmp/yay-bin
+    section "Installing AUR Helper (yay)"
+    msg_info "Installing base-devel and git..."
+    run_cmd sudo pacman -S --needed --noconfirm base-devel git
+    run_cmd git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
+    run_cmd bash -c "cd /tmp/yay-bin && makepkg -si --noconfirm"
+    run_cmd rm -rf /tmp/yay-bin
+    msg_ok "yay helper installed successfully."
 fi
 
 # Packages List
@@ -69,122 +108,171 @@ packages=(
     base-devel git go firefox zsh neovim psmisc bat man nomacs
     starship net-tools sublime-text lolcat tmux htop eza gimp key-mon fzf viewnior
     kitty haruna konsole alacritty rofi fish visual-studio-code-bin nekoray-bin
-    harmonoid-bin tilix spotify tabby-bin discord telegram-desktop
+    harmonoid-bin tilix spotify tabby-bin discord
     gedit vlc figlet ipython feh simplescreenrecorder flameshot
     audacious mpd ncmpcpp atril engrampa freetube-bin tty-clock nodejs npm
     karing-bin xclip xsel
+    expac ripgrep fd rsync wireless-regdb reflector lm_sensors ps_mem wget curl
 )
 
-logo "Installing Packages"
-yay -S --needed --noconfirm "${packages[@]}"
+section "Installing System Packages"
+msg_info "Fetching and installing dependencies via yay..."
+run_cmd yay -S --needed --noconfirm "${packages[@]}"
+msg_ok "Package installation phase completed."
+
+# Official Telegram Desktop Installation
+section "Installing Telegram Desktop (Official Binary)"
+msg_info "Downloading latest official release from telegram.org..."
+run_cmd mkdir -p "$HOME/.local/share" "$HOME/.local/bin" "$HOME/.local/share/applications"
+run_cmd wget -q --show-progress -O /tmp/tsetup.tar.xz "https://telegram.org/dl/desktop/linux"
+msg_info "Extracting Telegram to ~/.local/share/Telegram..."
+run_cmd tar -xf /tmp/tsetup.tar.xz -C "$HOME/.local/share/"
+run_cmd ln -sf "$HOME/.local/share/Telegram/Telegram" "$HOME/.local/bin/telegram"
+run_cmd rm -f /tmp/tsetup.tar.xz
+
+msg_info "Creating Desktop Entry for App Launchers..."
+if [ "$DRY_RUN" = "1" ]; then
+    run_cmd echo "Generating ~/.local/share/applications/telegram.desktop"
+else
+    cat <<EOF > "$HOME/.local/share/applications/telegram.desktop"
+[Desktop Entry]
+Name=Telegram Desktop
+Comment=Official desktop version of Telegram messaging app
+Exec=$HOME/.local/share/Telegram/Telegram -- %u
+Icon=telegram
+Terminal=false
+Type=Application
+Categories=Network;InstantMessaging;Qt;
+MimeType=x-scheme-handler/tg;
+Keywords=tg;chat;im;messaging;messenger;sms;tdesktop;
+EOF
+    chmod +x "$HOME/.local/share/applications/telegram.desktop"
+fi
+msg_ok "Official Telegram Desktop successfully configured."
+
+# TMOG Task Manager Installation (Official AppImage)
+section "Installing TMOG Task Manager (Official AppImage)"
+msg_info "Resolving latest AppImage download link from tmog.org..."
+run_cmd mkdir -p "$HOME/Applications" "$HOME/.local/bin" "$HOME/.local/share/applications"
+
+if [ "$DRY_RUN" = "1" ]; then
+    run_cmd echo "Fetching https://tmog.org to resolve latest AppImage release"
+    run_cmd echo "Downloading latest binary to $HOME/Applications/TaskManagerOG.AppImage"
+    run_cmd echo "Creating executable symlink in ~/.local/bin/tmog and .desktop launcher"
+else
+    tmog_path=$(curl -sL "https://tmog.org/" | grep -oP 'href="\K/downloads/TaskManagerOG-[^"]*-x86_64\.AppImage' | head -n 1)
+
+    if [ -n "$tmog_path" ]; then
+        tmog_url="https://tmog.org${tmog_path}"
+        msg_info "Found latest release: $tmog_url"
+        wget -q --show-progress -O "$HOME/Applications/TaskManagerOG.AppImage" "$tmog_url"
+
+        if [ -s "$HOME/Applications/TaskManagerOG.AppImage" ]; then
+            chmod +x "$HOME/Applications/TaskManagerOG.AppImage"
+            ln -sf "$HOME/Applications/TaskManagerOG.AppImage" "$HOME/.local/bin/tmog"
+
+            cat <<EOF > "$HOME/.local/share/applications/tmog.desktop"
+[Desktop Entry]
+Name=TMOG
+Comment=Task Manager OG by Dave Plummer
+Exec=$HOME/Applications/TaskManagerOG.AppImage %U
+Icon=utilities-system-monitor
+Terminal=false
+Type=Application
+Categories=System;Monitor;
+EOF
+            chmod +x "$HOME/.local/share/applications/tmog.desktop"
+            msg_ok "TMOG Task Manager installed and configured successfully."
+        else
+            msg_err "Download failed or empty file received."
+            rm -f "$HOME/Applications/TaskManagerOG.AppImage"
+        fi
+    else
+        msg_err "Could not resolve latest download link from tmog.org"
+    fi
+fi
 
 # Backup existing configs
-logo "Backing Up Existing Configurations"
-mkdir -p "$BACKUP_FOLDER"
+section "Backing Up Existing Configurations"
+msg_info "Backing up directories to $BACKUP_FOLDER..."
+run_cmd mkdir -p "$BACKUP_FOLDER"
 for cfg in bspwm polybar sxhkd alacritty kitty fish nvim rofi picom dunst; do
     if [ -d "$HOME/.config/$cfg" ]; then
-        mv "$HOME/.config/$cfg" "$BACKUP_FOLDER/" && log "Backed up $cfg to $BACKUP_FOLDER"
+        run_cmd mv "$HOME/.config/$cfg" "$BACKUP_FOLDER/"
+        msg_ok "Saved backup of $cfg"
     fi
 done
 
 # Clone and copy dotfiles
-logo "Downloading Dotfiles"
-rm -rf "$HOME/dotfiles"
-git clone --depth=1 https://github.com/Irmb7108/dotfiles.git "$HOME/dotfiles" || { log "Error: Failed to clone dotfiles"; exit 1; }
+section "Deploying Dotfiles"
+msg_info "Cloning dotfiles from GitHub..."
+run_cmd rm -rf "$HOME/dotfiles"
+run_cmd git clone --depth=1 https://github.com/Irmb7108/dotfiles.git "$HOME/dotfiles"
 
-mkdir -p "$HOME/.config"
-[ -d "$HOME/dotfiles/.config" ] && cp -r "$HOME/dotfiles/.config/"* "$HOME/.config/" 2>/dev/null
-[ -f "$HOME/dotfiles/home/.vimrc" ] && cp -f "$HOME/dotfiles/home/.vimrc" "$HOME/"
-[ -f "$HOME/dotfiles/home/tmux.conf" ] && cp -f "$HOME/dotfiles/home/tmux.conf" "$HOME/.tmux.conf"
+msg_info "Applying configurations to ~/.config..."
+run_cmd mkdir -p "$HOME/.config"
+run_cmd cp -r "$HOME/dotfiles/.config/"* "$HOME/.config/"
+run_cmd cp -f "$HOME/dotfiles/home/.vimrc" "$HOME/"
+run_cmd cp -f "$HOME/dotfiles/home/tmux.conf" "$HOME/.tmux.conf"
+msg_ok "Dotfiles deployed successfully."
+
+# Setup Keyboard Layout & Fast Switch
+section "Configuring Keyboard Layout"
+msg_info "Setting Persian (Windows) layout with zero-latency Alt+Shift..."
+run_cmd localectl set-x11-keymap us,ir pc105 ",pes_keypad" grp:alt_shift_toggle
+run_cmd kwriteconfig6 --file kglobalshortcutsrc --group "KDE Keyboard Layout Switcher" --key "Switch to Next Keyboard Layout" "none"
+msg_ok "Keyboard layout and shortcut conflicts fixed."
 
 # Fonts
-logo "Installing Fonts"
-mkdir -p "$HOME/.local/share/fonts"
-if [ ! -d "/tmp/SFMono-Fonts" ]; then
-    git clone --depth=1 https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git /tmp/SFMono-Fonts
-    find /tmp/SFMono-Fonts -name "*.ttf" -exec cp {} "$HOME/.local/share/fonts/" \;
-    rm -rf /tmp/SFMono-Fonts
-    fc-cache -f >/dev/null 2>&1
-fi
+section "Installing Developer Fonts"
+msg_info "Cloning and caching SFMono Nerd Font..."
+run_cmd mkdir -p "$HOME/.local/share/fonts"
+run_cmd git clone --depth=1 https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized.git /tmp/SFMono-Fonts
+run_cmd bash -c 'find /tmp/SFMono-Fonts -name "*.ttf" -exec cp {} "$HOME/.local/share/fonts/" \;'
+run_cmd rm -rf /tmp/SFMono-Fonts
+run_cmd fc-cache -f
+msg_ok "Fonts installed and refreshed."
 
 # Personal LazyVim
-logo "Installing Personal LazyVim"
-rm -rf "$HOME/.config/nvim"
-git clone https://github.com/Irmb7108/nvim.git "$HOME/.config/nvim" && log "Personal LazyVim installed successfully"
-
-# Oh My Zsh (Non-blocking unattended mode)
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    logo "Installing Oh-My-Zsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-fi
+section "Setting Up Neovim Environment"
+msg_info "Cloning personal Neovim configuration..."
+run_cmd rm -rf "$HOME/.config/nvim"
+run_cmd git clone https://github.com/Irmb7108/nvim.git "$HOME/.config/nvim"
+msg_ok "Neovim config ready."
 
 # Shell Choice
-logo "Shell Configuration"
-echo -e "${CYE}┌──────────────────────────────────────┐${CNC}"
-echo -e "${CYE}│   ${BLD}Y${CNC}${CYE} = Yes → Switch to Fish           │"
-echo -e "${CYE}│   ${BLD}N${CNC}${CYE} = No  → Keep Current/Zsh         │"
-echo -e "${CYE}└──────────────────────────────────────┘${CNC}"
-read -rp "$(echo -e "${CBL}➜ Set Fish as default shell? [Y/n]: ${CNC}")" answer
+section "Default Shell Selection"
+echo -e "  ${CYE}┌────────────────────────────────────────┐${CNC}"
+echo -e "  ${CYE}│   ${BLD}Y${CNC}${CYE} = Yes → Switch to Fish Shell       │"
+echo -e "  ${CYE}│   ${BLD}N${CNC}${CYE} = No  → Keep Current/Default       │"
+echo -e "  ${CYE}└────────────────────────────────────────┘${CNC}"
+read -rp "  $(echo -e "${CBL}➜ Set Fish as default shell? [Y/n]: ${CNC}")" answer
 case "$answer" in
     [Yy]* ) 
-        chsh -s "$(which fish)" && log "Default shell changed to fish"
+        run_cmd chsh -s /usr/bin/fish
+        msg_ok "Default shell switched to Fish."
         ;;
     * ) 
-        log "Shell kept as default"
+        msg_info "Default shell unchanged."
         ;;
 esac
+
 # Install ytdl-gui
-logo "ytdl-gui Installation"
-read -rp "$(echo -e "${CBL}➜ Do you want to install ytdl-gui? [y/N]: ${CNC}")" install_ytdl
+section "ytdl-gui Tool Installation"
+read -rp "  $(echo -e "${CBL}➜ Do you want to install ytdl-gui? [y/N]: ${CNC}")" install_ytdl
 if [[ $install_ytdl =~ ^[Yy]$ ]]; then
-    log "Installing ytdl-gui and its dependencies..."
-
-    # Install core system dependencies
-    yay -S --needed --noconfirm python python-pip yt-dlp ffmpeg python-pyqt6
-
-    rm -rf /tmp/ytdl-gui
-    git clone https://github.com/Irmb7108/ytdl-gui.git /tmp/ytdl-gui || log "Error: Failed to clone ytdl-gui"
-
-    # Install python requirements if exists
-    if [ -f "/tmp/ytdl-gui/requirements.txt" ]; then
-        pip install -r /tmp/ytdl-gui/requirements.txt --break-system-packages 2>/dev/null || pip install -r /tmp/ytdl-gui/requirements.txt
-    fi
-
-    # Setup application files
-    if [ -f "/tmp/ytdl-gui/setup.py" ]; then
-        pip install /tmp/ytdl-gui --break-system-packages 2>/dev/null || pip install /tmp/ytdl-gui
-    elif [ -f "/tmp/ytdl-gui/install.sh" ]; then
-        chmod +x /tmp/ytdl-gui/install.sh
-        bash /tmp/ytdl-gui/install.sh
-    else
-        mkdir -p "$HOME/.local/bin" "$HOME/.local/share/applications"
-        rm -rf "$HOME/.local/share/ytdl-gui"
-        cp -r /tmp/ytdl-gui "$HOME/.local/share/ytdl-gui"
-        find "$HOME/.local/share/ytdl-gui" -maxdepth 2 -type f -name "*.py" -exec chmod +x {} \;
-
-        # Create executable symlink in ~/.local/bin
-        main_file=$(find "$HOME/.local/share/ytdl-gui" -maxdepth 2 -type f -name "main.py" -o -name "app.py" -o -name "*gui*.py" | head -n 1)
-        if [ -n "$main_file" ]; then
-            ln -sf "$main_file" "$HOME/.local/bin/ytdl-gui"
-
-            # Create Desktop Entry for App Launcher / Rofi
-            cat <<EOF > "$HOME/.local/share/applications/ytdl-gui.desktop"
-[Desktop Entry]
-Name=YTDL GUI
-Comment=YouTube Downloader GUI
-Exec=python3 $main_file
-Icon=download
-Terminal=false
-Type=Application
-Categories=AudioVideo;Network;
-EOF
-            chmod +x "$HOME/.local/share/applications/ytdl-gui.desktop"
-        fi
-    fi
-
-    rm -rf /tmp/ytdl-gui
-    log "ytdl-gui setup completed."
+    msg_info "Installing ytdl-gui and Python dependencies..."
+    run_cmd yay -S --needed --noconfirm python python-pip yt-dlp ffmpeg python-pyqt6
+    run_cmd rm -rf /tmp/ytdl-gui
+    run_cmd git clone https://github.com/Irmb7108/ytdl-gui.git /tmp/ytdl-gui
+    run_cmd pip install /tmp/ytdl-gui --break-system-packages
+    run_cmd rm -rf /tmp/ytdl-gui
+    msg_ok "ytdl-gui successfully installed."
 fi
 
-read -rp "$(echo -e "${CBL}➜ Reboot now? [y/N]: ${CNC}")" reboot_choice
-[[ $reboot_choice =~ ^[Yy]$ ]] && sudo reboot
+# Reboot Prompt
+echo ""
+read -rp "  $(echo -e "${CBL}➜ All done! Reboot system now? [y/N]: ${CNC}")" reboot_choice
+[[ $reboot_choice =~ ^[Yy]$ ]] && run_cmd sudo reboot
+
+echo -e "\n  ${CGR}✔ Process completed!${CNC}\n"
