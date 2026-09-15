@@ -161,6 +161,8 @@ function ginit
     git commit -m "$msg"
     git push -u origin main
 end
+
+# Quick download a folder from GitHub with npx degit
 function gh-folder
     set url $argv[1]
     set dest $argv[2]
