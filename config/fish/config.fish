@@ -17,6 +17,7 @@ fish_add_path $HOME/.local/bin
 alias backup='chmod +x ~/.config/fish/scrips/backup-files/backup.sh && ~/.config/fish/scrips/backup-files/backup.sh'
 alias fix-maximized='kwriteconfig6 --file ~/.config/kwinrc --group Windows --key BorderlessMaximizedWindows false && echo "BorderlessMaximizedWindows set to false ✅"'
 alias installvpn='yay -S nekoray-bin'
+alias netclean='sudo iptables -F && sudo iptables -X'
 
 abbr con 'ping -c 5 8.8.8.8'
 abbr myip 'curl ifconfig.co'
@@ -25,17 +26,25 @@ abbr untar 'tar -zxvf'
 # Banner
 if type -q lolcat
     echo "
-            ▀▀▀▀        ▀■▄▄▄        ▐■▄        ░░░░       ▀▄▄▄     
-            ▐▓██▓▌   ▐▓██▓▓█▓▓▓▄▄▄    █▄▒▒▄▄ ▄▄▓▒█▓▓   ▐▓██▓▓▓███▄▄ 
+            ▀▀▀▀        ▀■▄▄▄        ▐■▄        ░░░░       ▀▄▄▄
+            ▐▓██▓▌   ▐▓██▓▓█▓▓▓▄▄▄    █▄▒▒▄▄ ▄▄▓▒█▓▓   ▐▓██▓▓▓███▄▄
             ▐▒▓▓▓▌   ▐▒▓▓▓██████▓█▌   ▓▒░░▒░▄█▓█░░▒▌   ▐▒▓▓▓███░░░█▌
             ▐░▒▒▒▌   ▐░▒▒▒▀▀▀ ▒▓░░▌   ▒▓▓▓▀██▀▀▓▓▓░▒   ▐░▒▒▒▀▀▀▓▒▒▒▓
-            ▐░░░░▌   ▐░░░░█   ▄▓▓▓▓█   ░░▒▒▌▐▓ ▐░░░█░   ▐░░░░   ▀▀██▀ 
-            ▀▒▓▓▓▌   ▀▒▓▓▓░▄▒▓▓▓▀▀▀   ▓▓░░▒ ░ ░▓▓▓░▀   ▀▒▓▓░█░░▒▓▓▄ 
+            ▐░░░░▌   ▐░░░░█   ▄▓▓▓▓█   ░░▒▒▌▐▓ ▐░░░█░   ▐░░░░   ▀▀██▀
+            ▀▒▓▓▓▌   ▀▒▓▓▓░▄▒▓▓▓▀▀▀   ▓▓░░▒ ░ ░▓▓▓░▀   ▀▒▓▓░█░░▒▓▓▄
             ▐▒▒▒▒▌   ▐▒▒▒▒▌▀▀▓▓▄▄     ░░▓▓▓   ░▒▒▒░▌   ▐▒▒▒▒▄  ▄▒▓▓▓
             ▐░░░░░   ▐░░░░░   ▀░░░░░   ▓ ░░░   ▒░░░░    ▐░░░░░░░░░░░▀
     " | lolcat
-    echo "⚡ Arch Linux Environment :: Stay Creative" | lolcat
+    echo "    🕒 Boot: $(uptime -s | cut -d' ' -f2) | Up: $(uptime -p | sed -e 's/up //' -e 's/ hours\?,/h/' -e 's/ minutes\?/m/')" | lolcat
+    echo "    ⚡ Arch Linux Environment :: Stay Creative" | lolcat
     echo ""
+end
+
+# === System & Keyboard Fixes ===
+function setkey --description 'تنظیم چیدمان فارسی ویندوزی و سوییچ سریع با Alt+Shift'
+    localectl set-x11-keymap us,ir pc105 ",pes_keypad" grp:alt_shift_toggle
+    kwriteconfig6 --file kglobalshortcutsrc --group "KDE Keyboard Layout Switcher" --key "Switch to Next Keyboard Layout" "none"
+    echo "Keyboard Layout (Persian Windows + Fast Alt+Shift) Configured! ✅"
 end
 
 # === Safe bass wrapper & script runner ===
@@ -107,10 +116,10 @@ function gcb
 end
 
 # === GitHub Auth & Remote Helpers ===
-# نکته: توکن اصلی خود را به جای YOUR_TOKEN قرار دهید
-set -gx GITHUB_USER "Irmb7108"
+set -gx GITHUB_USER Irmb7108
 if not set -q GITHUB_TOKEN
-    set -gx GITHUB_TOKEN "YOUR_TOKEN"
+    # نکته: توکن اصلی خود را به جای YOUR_TOKEN_HERE قرار دهید
+    set -gx GITHUB_TOKEN YOUR_TOKEN_HERE
 end
 
 function git-link
@@ -124,7 +133,7 @@ end
 
 function gpush
     git add .
-    set -l msg "update"
+    set -l msg update
     if test (count $argv) -gt 0
         set msg "$argv"
     end
@@ -132,8 +141,6 @@ function gpush
     git push -u origin (git branch --show-current)
 end
 
-
-# Quick Git Setup: Initialize repo, link to GitHub, and initial push -> ginit <repo-name> [commit-message]
 function ginit
     if test (count $argv) -eq 0
         echo "Usage: ginit <repo-name> [commit-message]"
