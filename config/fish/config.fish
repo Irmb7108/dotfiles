@@ -161,3 +161,13 @@ function ginit
     git commit -m "$msg"
     git push -u origin main
 end
+function gh-folder
+    set url $argv[1]
+    set dest $argv[2]
+    if test -z "$dest"
+        set dest "."
+    end
+
+    set clean_path (string replace -r '^https?://github.com/' '' $url | string replace -r '/tree/[^/]+/' '/')
+    npx degit $clean_path $dest
+end
