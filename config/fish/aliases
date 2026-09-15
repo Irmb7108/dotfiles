@@ -1,40 +1,15 @@
-# GNU / System Info
-alias py3='python3'
-alias cls='clear'
-alias cla='clear'
-alias ka='killall'
-alias mk='mkdir -pv'
-alias mv='mv -v'
-alias new='touch'
-alias cp='cp -rv'
-alias copy='cp -rf'
-alias rm='rm -vr'
-alias chx='chmod +x'
-alias cd..='cd ..'
-alias e='exit'
+# ==========================================
+# Core / System Navigation & Quick Files
+# ==========================================
+alias c="clear"
+alias cls="clear"
+alias cla="clear"
+alias e="exit"
+alias q="exit"
+alias cd..="cd .."
+alias pdw="pwd"
 
-# NeoVim
-alias nv='nvim'
-alias vi='nvim'
-alias v='nvim'
-
-# Modern Coreutils (eza & bat)
-alias ls='eza --icons'
-alias l='eza -lahF --color=always --icons --sort=size --group-directories-first'
-alias la='eza -a --color=always --group-directories-first --icons'
-alias ll='eza -l --color=always --group-directories-first --icons'
-alias tree='eza --tree'
-alias lr="l -R"
-alias lk="l -Sr"
-alias lm="l -tr"
-alias lc="lm -c"
-alias lx="l -X"
-alias ld="eza -1 | lolcat"
-
-alias cat="bat --theme=base16 --style=plain --paging=never"
-alias catt="bat --style header --style snip --style changes --style header"
-
-# Quick Navigation
+# Quick Jump (J Series)
 alias jdo="cd ~/Documents"
 alias jd="cd ~/Downloads"
 alias jg="cd ~/gitrepos"
@@ -47,47 +22,141 @@ alias jf="cd ~/.config/fish"
 alias jk="cd ~/.config/kitty"
 alias ja="cd ~/.config/alacritty"
 
-# Fast Interactive Jump (fd + fzf)
-alias cdf='cd (fd --type d . | fzf)'
+# Quick Dot Navigation (. Series)
+alias .c="cd ~/.config"
+alias .n="cd ~/.config/nvim"
+alias .f="cd ~/.config/fish"
+alias .p="cd ~/.config/polybar"
 
-# Process & Hardware Monitoring
-alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
-alias mem="ps axch -o cmd:15,%mem --sort=-%mem | head"
-alias psmem="sudo ps_mem | grep -E 'Program|awesome|picom|zsh|alacritty|---'"
-alias vram='glxinfo | grep -i "video memory"'
+# Interactive Directory Jump (fd + fzf)
+alias cdf="cd (fd --type d . | fzf)"
+
+# ==========================================
+# File & Archive Management
+# ==========================================
+alias cp="cp -iv"
+alias cpv="rsync -ahP"
+alias mv="mv -iv"
+alias rm="rm -iv"
+alias new="touch"
+alias mk="mkdir -pv"
+alias chx="chmod +x"
+
+alias mtar="tar -zcvf"
+alias utar="tar -zxvf"
+alias extract="tar -xvzf"
+alias wget="wget -c"
+
+# ==========================================
+# Modern CLI Replacements (eza, bat, ripgrep)
+# ==========================================
+alias ls="eza --icons"
+alias l="eza -lahF --color=always --icons --sort=size --group-directories-first"
+alias la="eza -a --color=always --group-directories-first --icons"
+alias ll="eza -l --color=always --group-directories-first --icons"
+alias tree="eza --tree"
+alias lr="l -R"
+alias lk="l -Sr"
+alias lm="l -tr"
+alias lc="lm -c"
+alias lx="l -X"
+alias ld="eza -1 | lolcat"
+
+alias cat="bat --theme=base16 --style=plain --paging=never"
+alias catt="bat --style header --style snip --style changes"
+alias less="bat"
+
+alias grep="grep --color=auto"
+alias egrep="egrep --color=auto"
+alias fgrep="fgrep --color=auto"
+alias rg="rg --sort path --no-ignore --hidden"
+
+# ==========================================
+# Editors, Multiplexers & Terminal Apps
+# ==========================================
+alias nv="nvim"
+alias vi="nvim"
+alias v="nvim"
 alias tm="tmux-sessionizer"
 alias ra="ranger"
+alias py3="python3"
 
-# Networking & Archives
+# ==========================================
+# System Logs & Troubleshooting (Like jctl)
+# ==========================================
+alias jctl="journalctl -p 3 -xb"
+alias jlive="journalctl -f"
+alias failed="systemctl --failed"
+alias blame="systemd-analyze blame | head -n 15"
+alias dmesg-err="sudo dmesg -T --level=err,warn | tail -n 25"
+
+# ==========================================
+# Network & Connectivity
+# ==========================================
 alias ping="ping -c 4"
-alias cpv='rsync -ahP'
-alias mtar='tar -zcvf'
-alias utar='tar -zxvf'
-alias extract="tar -xvzf"
+alias pingfast="ping -c 5 -i 0.2 1.1.1.1"
+alias ports="sudo ss -tulpn"
+alias mynet="ip -brief address"
 
-# Arch Linux (Pacman & Yay)
+# ==========================================
+# Hardware, Process & Performance Monitoring
+# ==========================================
+alias cpu="ps axch -o cmd:15,%cpu --sort=-%cpu | head"
+alias mem="ps axch -o cmd:15,%mem --sort=-%mem | head"
+alias topmem="ps aux --sort=-%mem | head -n 6"
+alias topcpu="ps aux --sort=-%cpu | head -n 6"
+alias df="df -h"
+alias dfclean="df -h -x tmpfs -x devtmpfs -x efivarfs"
+alias big="du -ah . 2>/dev/null | sort -rh | head -n 10"
+alias vram='glxinfo | grep -i "video memory"'
+alias temp="sensors 2>/dev/null || vram"
+alias psmem="sudo ps_mem | grep -E 'Program|awesome|picom|zsh|alacritty|---'"
+alias ka="killall"
+alias g="gotop"
+
+# ==========================================
+# Arch Linux (Pacman, Yay & Maintenance)
+# ==========================================
 alias unlock="sudo rm -f /var/lib/pacman/db.lck"
 alias install="sudo pacman -S"
 alias linstall="sudo pacman -U"
 alias search="sudo pacman -Qs"
 alias remove="sudo pacman -Rns"
-alias clrcache="sudo pacman -Scc"
-alias akring="sudo pacman -Sy archlinux-keyring --noconfirm"
-
+alias update="yay -Syyu"
 alias up="yay -Syyu"
 alias ref="yay -Syy"
 alias searc="yay -Ss"
-alias pacs="yay -Q | wc -l"
-alias list="yay -Q"
-alias aur_list="yay -Qm"
+alias clrcache="sudo pacman -Scc"
+alias akring="sudo pacman -Sy archlinux-keyring --noconfirm"
+alias grubup="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+alias updatefonts="sudo fc-cache -fv"
+alias cleanup="yay -Qtdq | yay -Rns -"
 alias cleanpac="yay -Qtdq | yay -Rns -"
 
-# FZF Search Helpers (Yay)
-alias paci="yay -Slq | fzf --color=16 -m --preview 'cat <(yay -Si {1}) <(yay -Fl {1} | awk \"{print \$2}\")' | xargs -ro yay -S --needed"
+# Packages Query & Inspection
+alias list="yay -Q"
+alias aur_list="yay -Qm"
+alias pacs="yay -Q | wc -l"
+alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+alias riplong="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -3000 | nl"
+
+
+# FZF Search Helpers (Yay - Optimized for Fish)
+alias paci="yay -Slq | fzf --color=16 -m --preview 'yay -Si {1}' --preview-window=right:65%:wrap | xargs -ro yay -S --needed"
 alias pacr="yay -Qq | fzf --color=16 -m --preview 'yay -Qi {1}' | xargs -ro yay -Rns"
 alias pac="yay -Q | fzf --color=16"
 
-# Fixes & Tools
-alias fix-maximized='kwriteconfig6 --file ~/.config/kwinrc --group Windows --key BorderlessMaximizedWindows false && echo "BorderlessMaximizedWindows set to false ✅"'
-alias dot="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# ==========================================
+# Security & Git Helpers
+# ==========================================
+alias gpgexportprivkey="gpg --export-secret-keys --armor"
+alias gpgimportkey="gpg --import"
+alias gpglistkeys="gpg --list-keys --keyid-format LONG"
+alias gc="git clone"
 alias git-rm="git ls-files --deleted -z | xargs -0 git rm"
+alias dot="git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+
+# ==========================================
+# KDE Plasma Fixes & Fun
+# ==========================================
+alias clock="tty-clock -sct -C 4"
