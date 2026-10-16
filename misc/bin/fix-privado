@@ -1,0 +1,38 @@
+#!/bin/sh
+target_dir="wgtunnel"
+zip_name="wgtunnel-import.zip"
+
+# Auto delete files older than 8 days (+7 full days)
+find . -maxdepth 2 -type f -mtime +7 -delete 2>/dev/null
+
+rm -rf "$target_dir" "$zip_name"
+mkdir -p "$target_dir"
+count=0
+
+for f in *.conf; do
+  [ -f "$f" ] || continue
+  dest="$target_dir/$f"
+  cp "$f" "$dest"
+
+  # 1. Update DNS
+  sed -i 's|^DNS = .*|DNS = 1.1.1.1, 8.8.8.8|' "$dest"
+
+  # 2. Inject AmneziaWG parameters
+  if ! grep -q "^Jc =" "$dest"; then
+    sed -i '/^DNS =/a MTU = 1280\nJc = 4\nJmin = 40\nJmax = 70\nS1 = 0\nS2 = 0\nH1 = 1\nH2 = 2\nH3 = 3\nH4 = 4' "$dest"
+  fi
+
+  # 3. Add PersistentKeepalive
+  if ! grep -q "^PersistentKeepalive" "$dest"; then
+    printf "\nPersistentKeepalive = 25\n" >>"$dest"
+  fi
+
+  count=$((count + 1))
+done
+
+if [ "$count" -gt 0 ]; then
+  (cd "$target_dir" && zip -q "../$zip_name" *.conf)
+  echo "[+] Done: Cleaned old files, patched $count configs and created '$zip_name'."
+else
+  echo "[-] Warning: No .conf files found."
+fi
