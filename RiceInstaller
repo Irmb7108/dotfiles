@@ -52,7 +52,7 @@ banner() {
             ██║██║  ██║      ██║ ╚═╝ ██║██████╔╝
             ╚═╝╚═╝  ╚═╝      ╚═╝     ╚═╝╚═════╝
           \033[0m               Author: IR-MB
-                   https://github.com/Irmb7108/dotfiles\n"
+                    https://github.com/Irmb7108/dotfiles\n"
     if [ "$DRY_RUN" = "1" ]; then
         echo -e "  ${CYE}╔═════════════════════════════════════════════════════════╗${CNC}"
         echo -e "  ${CYE}║   ⚙  MODE: SIMULATION / DRY RUN (SAFE PREVIEW)         ║${CNC}"
@@ -269,6 +269,41 @@ if [[ $install_ytdl =~ ^[Yy]$ ]]; then
     run_cmd rm -rf /tmp/ytdl-gui
     msg_ok "ytdl-gui successfully installed."
 fi
+
+# Privado & WG Tunnel Setup
+section "PrivadoVPN & WG Tunnel Environment"
+read -rp "  $(echo -e "${CBL}➜ Set up WG Tunnel & Privado CLI tool? [Y/n]: ${CNC}")" setup_privado
+case "$setup_privado" in
+    [Nn]* )
+        msg_info "Skipping Privado & WG Tunnel setup."
+        ;;
+    * )
+        msg_info "Installing WG Tunnel package from AUR..."
+        run_cmd yay -S --needed --noconfirm wgtunnel-bin
+
+        msg_info "Enabling and starting wgtunnel systemd daemon..."
+        run_cmd sudo systemctl enable --now wgtunnel
+
+        msg_info "Installing fix-privado CLI utility to /usr/local/bin..."
+        run_cmd sudo curl -sSL https://raw.githubusercontent.com/Irmb7108/privado-wg-tool/main/fix-privado -o /usr/local/bin/fix-privado
+        run_cmd sudo chmod +x /usr/local/bin/fix-privado
+
+        msg_ok "Privado & WG Tunnel toolchain deployed successfully."
+        ;;
+esac
+
+# Privado Reminder & Summary Log
+log "[REMINDER] PrivadoVPN Toolchain: Use bookmarklet at https://github.com/Irmb7108/privado-wg-tool to download 10 configs, run 'fix-privado', and import wgtunnel-import.zip into WG Tunnel."
+
+echo -e "\n${CCY}╭─────────────────────────────────────────────────────────────╮${CNC}"
+echo -e "${CCY}│${CNC}  ${BLD}📌 REMINDER: PrivadoVPN / AmneziaWG Toolchain${CNC}"
+echo -e "${CCY}├─────────────────────────────────────────────────────────────┤${CNC}"
+echo -e "${CCY}│${CNC}  1. Open Privado panel: ${CBL}https://app.privadovpn.com/en/admin-panel${CNC}"
+echo -e "${CCY}│${CNC}  2. Click browser bookmarklet to grab 10 profiles"
+echo -e "${CCY}│${CNC}  3. Run ${CGR}fix-privado${CNC} in ~/Downloads"
+echo -e "${CCY}│${CNC}  4. Import ${CYE}wgtunnel-import.zip${CNC} into WG Tunnel"
+echo -e "${CCY}│${CNC}  Repo: ${CBL}https://github.com/Irmb7108/privado-wg-tool${CNC}"
+echo -e "${CCY}╰─────────────────────────────────────────────────────────────╯${CNC}\n"
 
 # Reboot Prompt
 echo ""
